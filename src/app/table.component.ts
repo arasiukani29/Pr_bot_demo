@@ -58,7 +58,7 @@ export class TableComponent {
       return;
     }
 
-    const nextId = Math.max(0, ...this.users().map(u => u.id)) + 1;
+    const nextId = this.users().reduce((max, u) => Math.max(max, u.id), 0) + 1;
 
     this.users.update(currentList => [
       ...currentList,

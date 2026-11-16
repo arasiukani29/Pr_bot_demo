@@ -96,6 +96,7 @@
                 (click)="deleteUser(user.id)"
                 class="btn-remove"
                 title="Remove member"
+                [attr.aria-label]="'Remove ' + user.name"
               >
                 Remove
               </button>
