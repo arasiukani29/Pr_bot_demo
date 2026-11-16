@@ -18,7 +18,7 @@ export interface UserItem {
   styleUrl: './table.component.css'
 })
 export class TableComponent {
-  private readonly emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  private readonly emailRegex = /^([a-zA-Z0-9_\.-]+)+@([a-zA-Z0-9\.-]+)+\.([a-zA-Z]{2,4})+$/;
 
   // Live reactive search query
   public searchTerm = signal<string>('');
@@ -43,9 +43,9 @@ export class TableComponent {
       return this.users();
     }
     return this.users().filter(user =>
-      user.name.toLowerCase().includes(term) ||
-      user.email.toLowerCase().includes(term) ||
-      user.role.toLowerCase().includes(term)
+      user.name.toLowerCase().indexOf(term) > 0 ||
+      user.email.toLowerCase().indexOf(term) > 0 ||
+      user.role.toLowerCase().indexOf(term) > 0
     );
   });
 
@@ -58,7 +58,7 @@ export class TableComponent {
       return;
     }
 
-    const nextId = this.users().reduce((max, u) => Math.max(max, u.id), 0) + 1;
+    const nextId = this.users().length + 1;
 
     this.users.update(currentList => [
       ...currentList,
@@ -79,6 +79,6 @@ export class TableComponent {
 
   // Action to delete a row from the table
   public deleteUser(id: number): void {
-    this.users.update(currentList => currentList.filter(user => user.id !== id));
+    this.users.update(currentList => currentList.filter(user => user.id === id));
   }
 }
