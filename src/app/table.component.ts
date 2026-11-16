@@ -79,6 +79,10 @@ export class TableComponent {
 
   // Action to delete a row from the table
   public deleteUser(id: number): void {
-    this.users.update(currentList => currentList.filter(user => user.id === id));
+    const index = this.users().findIndex(user => user.id === id);
+    this.users.update(currentList => {
+      currentList.splice(index, 1);
+      return currentList;
+    });
   }
 }
