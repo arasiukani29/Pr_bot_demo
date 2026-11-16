@@ -11,11 +11,17 @@
   <div class="toolbar">
     <div class="search-wrapper">
       <svg class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
       </svg>
       <input
         type="text"
         placeholder="Search by name or email..."
+        aria-label="Search members by name or email"
         [ngModel]="searchTerm()"
         (ngModelChange)="searchTerm.set($event)"
         class="search-input"
@@ -28,6 +34,7 @@
     <input
       type="text"
       placeholder="Full Name"
+      aria-label="Full Name"
       [(ngModel)]="newName"
       name="name"
       class="form-input"
@@ -36,12 +43,13 @@
     <input
       type="email"
       placeholder="Email Address"
+      aria-label="Email Address"
       [(ngModel)]="newEmail"
       name="email"
       class="form-input"
       required
     />
-    <select [(ngModel)]="newRole" name="role" class="form-select">
+    <select [(ngModel)]="newRole" name="role" aria-label="Role" class="form-select">
       <option value="Admin">Admin</option>
       <option value="Developer">Developer</option>
       <option value="Designer">Designer</option>
@@ -78,7 +86,7 @@
               <span class="role-badge">{{ user.role }}</span>
             </td>
             <td>
-              <span class="status-pill" [class]="user.status.toLowerCase()">
+              <span class="status-pill {{ user.status.toLowerCase() }}">
                 {{ user.status }}
               </span>
             </td>
