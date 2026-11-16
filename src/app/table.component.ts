@@ -18,6 +18,8 @@ export interface UserItem {
   styleUrl: './table.component.css'
 })
 export class TableComponent {
+  private readonly emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   // Live reactive search query
   public searchTerm = signal<string>('');
 
@@ -47,22 +49,23 @@ export class TableComponent {
     );
   });
 
-  // Action to add a new row to the table
+  // Action to add a new row to the table with email format validation & safe ID reduction
   public addUser(): void {
-    if (!this.newName.trim() || !this.newEmail.trim()) {
+    const trimmedName = this.newName.trim();
+    const trimmedEmail = this.newEmail.trim();
+
+    if (!trimmedName || !trimmedEmail || !this.emailRegex.test(trimmedEmail)) {
       return;
     }
 
-    const nextId = this.users().length > 0
-      ? Math.max(...this.users().map(u => u.id)) + 1
-      : 1;
+    const nextId = this.users().reduce((max, u) => Math.max(max, u.id), 0) + 1;
 
     this.users.update(currentList => [
       ...currentList,
       {
         id: nextId,
-        name: this.newName.trim(),
-        email: this.newEmail.trim(),
+        name: trimmedName,
+        email: trimmedEmail,
         role: this.newRole,
         status: 'Active'
       }
