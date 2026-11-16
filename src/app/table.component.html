@@ -59,6 +59,9 @@
       <span>+ Add Row</span>
     </button>
   </form>
+  @if (errorMessage()) {
+    <div class="form-error" role="alert">{{ errorMessage() }}</div>
+  }
 
   <!-- Table -->
   <div class="table-container">
@@ -78,7 +81,7 @@
           <tr class="table-row">
             <td class="td-id">#{{ user.id }}</td>
             <td class="td-name">
-              <div class="avatar">{{ user.name.charAt(0) }}</div>
+              <div class="avatar">{{ user.name.trim().charAt(0).toUpperCase() }}</div>
               <span class="name-text">{{ user.name }}</span>
             </td>
             <td class="td-email">{{ user.email }}</td>

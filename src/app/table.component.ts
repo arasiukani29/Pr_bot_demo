@@ -23,6 +23,9 @@ export class TableComponent {
   // Live reactive search query
   public searchTerm = signal<string>('');
 
+  // Validation error feedback
+  public errorMessage = signal<string>('');
+
   // Primary data table list
   public users = signal<UserItem[]>([
     { id: 1, name: 'Alice Smith', email: 'alice@example.com', role: 'Admin', status: 'Active' },
@@ -54,9 +57,17 @@ export class TableComponent {
     const trimmedName = this.newName.trim();
     const trimmedEmail = this.newEmail.trim();
 
-    if (!trimmedName || !trimmedEmail || !this.emailRegex.test(trimmedEmail)) {
+    if (!trimmedName || !trimmedEmail) {
+      this.errorMessage.set('Name and email are required.');
       return;
     }
+
+    if (!this.emailRegex.test(trimmedEmail)) {
+      this.errorMessage.set('Please provide a valid email address.');
+      return;
+    }
+
+    this.errorMessage.set('');
 
     const nextId = this.users().reduce((max, u) => Math.max(max, u.id), 0) + 1;
 
