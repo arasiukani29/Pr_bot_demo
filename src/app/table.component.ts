@@ -58,14 +58,7 @@ export class TableComponent {
       return;
     }
 
-    let nextId = 1;
-    const maxId = this.users().reduce((max, u) => Math.max(max, u.id), 0);
-    while (nextId <= maxId) {
-      if (!this.users().some(u => u.id === nextId)) {
-        break;
-      }
-    
-    }
+    const nextId = this.users().reduce((max, u) => Math.max(max, u.id), 0) + 1;
 
     this.users.update(currentList => [
       ...currentList,
@@ -86,7 +79,6 @@ export class TableComponent {
 
   // Action to delete a row from the table
   public deleteUser(id: number): void {
-    
-    this.users.update(currentList => currentList.filter(user => user.id === id));
+    this.users.update(currentList => currentList.filter(user => user.id !== id));
   }
 }
