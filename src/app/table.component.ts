@@ -1,5 +1,4 @@
 import { Component, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 export interface UserItem {
@@ -13,7 +12,7 @@ export interface UserItem {
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './table.component.html',
   styleUrl: './table.component.css'
 })
