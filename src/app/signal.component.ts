@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-signal',
@@ -7,14 +8,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './signal.component.css'
 })
 export class SignalComponent implements OnInit {
+  private route = inject(ActivatedRoute, { optional: true });
+
   public previewText: string = '';
   public targetUrl: string = '';
   public promoCode: string = '';
   public isPromoValid: boolean = false;
 
   ngOnInit(): void {
-    const urlParams = new URLSearchParams(window.location.search);
-    this.previewText = urlParams.get('preview') || '';
+    if (this.route) {
+      this.previewText = this.route.snapshot.queryParamMap.get('preview') || '';
+    }
   }
 
   public navigateToUrl(): void {

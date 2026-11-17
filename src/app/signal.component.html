@@ -18,7 +18,7 @@
       </p>
 
       @if (previewText) {
-        <div class="user-dynamic-preview">{{ previewText }}</div>
+        <div class="user-dynamic-preview" [textContent]="previewText"></div>
       }
 
       <div class="card-info">
