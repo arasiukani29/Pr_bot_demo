@@ -1,5 +1,7 @@
 namespace DummyLoginApi.Services;
 
+using System.Security.Cryptography;
+using System.Text;
 using DummyLoginApi.Models;
 
 public class AuthService : IAuthService
@@ -26,7 +28,7 @@ public class AuthService : IAuthService
         var matchedUser = DummyUsers.FirstOrDefault(u =>
             string.Equals(u.Username, request.Username.Trim(), StringComparison.OrdinalIgnoreCase));
 
-        if (matchedUser == default || matchedUser.Password != request.Password)
+        if (matchedUser == default || !SecureStringEquals(matchedUser.Password, request.Password))
         {
             return Task.FromResult(new LoginResponseDto
             {
@@ -45,5 +47,12 @@ public class AuthService : IAuthService
             Token = dummyToken,
             Username = matchedUser.Username
         });
+    }
+
+    private static bool SecureStringEquals(string a, string b)
+    {
+        var aBytes = Encoding.UTF8.GetBytes(a);
+        var bBytes = Encoding.UTF8.GetBytes(b);
+        return CryptographicOperations.FixedTimeEquals(aBytes, bBytes);
     }
 }
