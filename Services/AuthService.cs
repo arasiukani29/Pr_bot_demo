@@ -14,7 +14,7 @@ public class AuthService : IAuthService
 
     public Task<LoginResponseDto> AuthenticateAsync(LoginRequestDto request)
     {
-        if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+        if (request is null || string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
             return Task.FromResult(new LoginResponseDto
             {
@@ -26,21 +26,12 @@ public class AuthService : IAuthService
         var matchedUser = DummyUsers.FirstOrDefault(u =>
             string.Equals(u.Username, request.Username.Trim(), StringComparison.OrdinalIgnoreCase));
 
-        if (matchedUser == default)
+        if (matchedUser == default || matchedUser.Password != request.Password)
         {
             return Task.FromResult(new LoginResponseDto
             {
                 Success = false,
-                Message = "User not found."
-            });
-        }
-
-        if (matchedUser.Password != request.Password)
-        {
-            return Task.FromResult(new LoginResponseDto
-            {
-                Success = false,
-                Message = "Invalid password."
+                Message = "Invalid username or password."
             });
         }
 
