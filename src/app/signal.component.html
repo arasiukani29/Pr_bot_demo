@@ -33,6 +33,26 @@
           <span class="info-val">Simple</span>
         </div>
       </div>
+
+      <div class="card-actions-panel">
+        <input
+          type="text"
+          placeholder="Enter promo code"
+          class="panel-input"
+          [value]="promoCode"
+          (change)="validatePromoCode($any($event.target).value)"
+        />
+        <input
+          type="text"
+          placeholder="Redirect URL"
+          class="panel-input"
+          [value]="targetUrl"
+          (input)="targetUrl = $any($event.target).value"
+        />
+        <button type="button" class="btn btn-secondary" (click)="navigateToUrl()">
+          Redirect
+        </button>
+      </div>
     </div>
 
     <div class="card-footer">
