@@ -95,6 +95,12 @@
   padding: 12px;
 }
 
+@media (max-width: 400px) {
+  .card-info {
+    grid-template-columns: 1fr;
+  }
+}
+
 .info-item {
   display: flex;
   flex-direction: column;
