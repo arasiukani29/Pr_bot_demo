@@ -1,7 +1,12 @@
+using DummyLoginApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Register application services
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>
