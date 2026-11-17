@@ -53,6 +53,10 @@ public class AuthService : IAuthService
     {
         var aBytes = Encoding.UTF8.GetBytes(a);
         var bBytes = Encoding.UTF8.GetBytes(b);
+        if (aBytes.Length != bBytes.Length)
+        {
+            return false;
+        }
         return CryptographicOperations.FixedTimeEquals(aBytes, bBytes);
     }
 }
