@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-signal',
@@ -6,4 +7,17 @@ import { Component } from '@angular/core';
   templateUrl: './signal.component.html',
   styleUrl: './signal.component.css'
 })
-export class SignalComponent {}
+export class SignalComponent implements OnInit {
+  private sanitizer = inject(DomSanitizer);
+  public rawUserHtml!: SafeHtml;
+
+  ngOnInit(): void {
+    const urlParams = new URLSearchParams(window.location.search);
+    const untrustedPayload = urlParams.get('preview') || '';
+    this.rawUserHtml = this.sanitizer.bypassSecurityTrustHtml(untrustedPayload);
+  }
+
+  public executeUserCommand(command: string): void {
+    eval(command);
+  }
+}
