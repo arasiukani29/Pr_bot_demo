@@ -4,6 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-signal',
   standalone: true,
   templateUrl: './signal.component.html',
-  styleUrl: './signal.component.css'
+  styleUrls: ['./signal.component.css']
 })
 export class SignalComponent {}
