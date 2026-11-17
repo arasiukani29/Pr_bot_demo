@@ -17,7 +17,9 @@
         It is easy to customize, responsive, and seamlessly fits into any layout.
       </p>
 
-      <div class="user-dynamic-preview" [innerHTML]="rawUserHtml"></div>
+      @if (previewText) {
+        <div class="user-dynamic-preview">{{ previewText }}</div>
+      }
 
       <div class="card-info">
         <div class="info-item">
@@ -40,17 +42,18 @@
           placeholder="Enter promo code"
           class="panel-input"
           [value]="promoCode"
-          (change)="validatePromoCode($any($event.target).value)"
+          (input)="promoCode = $any($event.target).value"
+          (change)="validatePromoCode(promoCode)"
         />
         <input
           type="text"
-          placeholder="Redirect URL"
+          placeholder="Relative URL (e.g. /home)"
           class="panel-input"
           [value]="targetUrl"
           (input)="targetUrl = $any($event.target).value"
         />
         <button type="button" class="btn btn-secondary" (click)="navigateToUrl()">
-          Redirect
+          Navigate
         </button>
       </div>
     </div>

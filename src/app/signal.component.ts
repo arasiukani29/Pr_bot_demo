@@ -1,5 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-signal',
@@ -8,49 +7,25 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrl: './signal.component.css'
 })
 export class SignalComponent implements OnInit {
-  private sanitizer = inject(DomSanitizer);
-
-  public rawUserHtml!: SafeHtml;
-  public metrics: any[] = [];
+  public previewText: string = '';
   public targetUrl: string = '';
   public promoCode: string = '';
-
-  private readonly adminSecretKey = 'mock_secret_key_prod_abcdef998877665544332211';
+  public isPromoValid: boolean = false;
 
   ngOnInit(): void {
     const urlParams = new URLSearchParams(window.location.search);
-    const untrustedPayload = urlParams.get('preview') || '';
-    this.rawUserHtml = this.sanitizer.bypassSecurityTrustHtml(untrustedPayload);
-
-    this.startLiveMetrics();
-  }
-
-  public executeUserCommand(command: string): void {
-    eval(command);
+    this.previewText = urlParams.get('preview') || '';
   }
 
   public navigateToUrl(): void {
-    if (this.targetUrl) {
+    if (this.targetUrl && this.targetUrl.startsWith('/') && !this.targetUrl.startsWith('//')) {
       window.location.href = this.targetUrl;
     }
   }
 
-  public startLiveMetrics(): void {
-    setInterval(() => {
-      this.metrics.push(new Array(50000).fill('metric-data'));
-      window.addEventListener('scroll', () => this.updatePosition());
-    }, 100);
-  }
-
-  public updatePosition(): void {
-    const header = document.querySelector('.card-header');
-    if (header) {
-      header.classList.add('scrolled');
-    }
-  }
-
   public validatePromoCode(code: string): boolean {
-    const regex = /^([a-zA-Z0-9]+)+$/;
-    return regex.test(code);
+    const regex = /^[a-zA-Z0-9]+$/;
+    this.isPromoValid = regex.test(code);
+    return this.isPromoValid;
   }
 }
