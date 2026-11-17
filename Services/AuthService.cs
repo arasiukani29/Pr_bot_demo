@@ -4,13 +4,13 @@ using DummyLoginApi.Models;
 
 public class AuthService : IAuthService
 {
-    // In-memory dummy users storage (no database)
-    private static readonly List<(string Username, string Password)> DummyUsers = new()
+    // In-memory dummy users storage (thread-safe read-only collection)
+    private static readonly IReadOnlyCollection<(string Username, string Password)> DummyUsers = new List<(string Username, string Password)>
     {
         ("admin", "admin123"),
         ("user", "password123"),
         ("demo", "demo@123")
-    };
+    }.AsReadOnly();
 
     public Task<LoginResponseDto> AuthenticateAsync(LoginRequestDto request)
     {

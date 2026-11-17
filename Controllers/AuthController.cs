@@ -30,6 +30,6 @@ public class AuthController : ControllerBase
             return Unauthorized(result);
         }
 
-        return NotFound(result);
+        return Ok(result);
     }
 }
