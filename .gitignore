@@ -1,14 +1,27 @@
-# Dependencies
-node_modules/
+# Build and runtime output
+bin/
+obj/
+out/
+[Bb]in/
+[Oo]bj/
 
-# Build output
-dist/
-.angular/
-
-# IDE / Editor
+# Visual Studio / VS Code
+.vs/
 .vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / JetBrains
 .idea/
 
-# OS
+# OS / Environment
 Thumbs.db
 .DS_Store
+*.env
+*.env.*
+!*.env.example
+
+# Logs
+*.log
