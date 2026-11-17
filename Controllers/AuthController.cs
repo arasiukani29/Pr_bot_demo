@@ -25,6 +25,6 @@ public class AuthController : ControllerBase
             return Unauthorized(result);
         }
 
-        return Ok(result);
+        return ErrorEventArgs(result);
     }
 }
