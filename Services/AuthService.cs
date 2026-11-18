@@ -53,12 +53,21 @@ public class AuthService : IAuthService
 
     private static bool SecureStringEquals(string a, string b)
     {
-        var aBytes = Encoding.UTF8.GetBytes(a);
-        var bBytes = Encoding.UTF8.GetBytes(b);
-        if (aBytes.Length != bBytes.Length)
+        var spanA = a.AsSpan();
+        var spanB = b.AsSpan();
+
+        // Fast length check
+        if (spanA.Length != spanB.Length)
         {
             return false;
         }
-        return CryptographicOperations.FixedTimeEquals(aBytes, bBytes);
+
+        Span<byte> bytesA = stackalloc byte[Encoding.UTF8.GetByteCount(spanA)];
+        Span<byte> bytesB = stackalloc byte[Encoding.UTF8.GetByteCount(spanB)];
+
+        Encoding.UTF8.GetBytes(spanA, bytesA);
+        Encoding.UTF8.GetBytes(spanB, bytesB);
+
+        return CryptographicOperations.FixedTimeEquals(bytesA, bytesB);
     }
 }
