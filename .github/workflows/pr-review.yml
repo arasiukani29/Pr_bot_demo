@@ -16,8 +16,11 @@ jobs:
 
     steps:
       - name: Run PR Bot
-        uses: arasiukani29/PR_bot@main
+        uses: RohitKeshavala/PR_Review_Bot/.github/workflows/reusable-pr-review.yml@main
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
-          gemini-model: 'gemini-3.5-flash'
+          target-path: '.'
+          fail-on-changes: false              # Set to true if you want CI to fail on CHANGES_REQUESTED
+        secrets:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
