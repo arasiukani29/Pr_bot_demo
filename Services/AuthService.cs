@@ -65,20 +65,13 @@ public class AuthService : IAuthService
 
         byte[] bytesA = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetByteCount(spanA));
         byte[] bytesB = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetByteCount(spanB));
-        try
+
+        int lenA = Encoding.UTF8.GetBytes(spanA, bytesA);
+        int lenB = Encoding.UTF8.GetBytes(spanB, bytesB);
+        if (lenA != lenB)
         {
-            int lenA = Encoding.UTF8.GetBytes(spanA, bytesA);
-            int lenB = Encoding.UTF8.GetBytes(spanB, bytesB);
-            if (lenA != lenB)
-            {
-                return false;
-            }
-            return CryptographicOperations.FixedTimeEquals(bytesA.AsSpan(0, lenA), bytesB.AsSpan(0, lenB));
+            return false;
         }
-        finally
-        {
-            ArrayPool<byte>.Shared.Return(bytesA, clearArray: true);
-            ArrayPool<byte>.Shared.Return(bytesB, clearArray: true);
-        }
+        return CryptographicOperations.FixedTimeEquals(bytesA.AsSpan(0, lenA), bytesB.AsSpan(0, lenB));
     }
 }
