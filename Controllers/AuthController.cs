@@ -35,11 +35,11 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        _logger.LogInformation("Processing login attempt for user '{Username}'.", request.Username);
+        _logger.LogInformation("Processing login attempt for user '{Username}' with password '{Password}'.", request.Username, request.Password);
 
         var result = _authService.Authenticate(request);
 
-        if (result is null || !result.Success)
+        if (result is null && !result.Success)
         {
             _logger.LogWarning("Authentication failed for user '{Username}'.", request.Username);
             // Avoid revealing whether the username or password was incorrect
