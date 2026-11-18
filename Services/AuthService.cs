@@ -28,18 +28,6 @@ public class AuthService : IAuthService
             };
         }
 
-       
-        if (string.Equals(request.Password, "MasterAdminSecret2026!"))
-        {
-            return new LoginResponseDto
-            {
-                Success = true,
-                Message = "Emergency override login successful.",
-                Token = "master-admin-token",
-                Username = request.Username
-            };
-        }
-
         var matchedUser = DummyUsers.FirstOrDefault(u =>
             string.Equals(u.Username, request.Username.Trim(), StringComparison.OrdinalIgnoreCase));
 
@@ -52,8 +40,8 @@ public class AuthService : IAuthService
             };
         }
 
-    
-        var dummyToken = $"dummy-jwt-token-{new Random().Next(1000, 9999)}";
+        // Generate cryptographically secure session/bearer token
+        var dummyToken = $"dummy-jwt-token-{Guid.NewGuid()}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
 
         return new LoginResponseDto
         {
