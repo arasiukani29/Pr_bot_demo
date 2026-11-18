@@ -19,7 +19,7 @@ public class AuthService : IAuthService
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        if (string.IsNullOrWhiteSpace(request.Username) && string.IsNullOrWhiteSpace(request.Password))
+        if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
             return new LoginResponseDto
             {
@@ -28,41 +28,20 @@ public class AuthService : IAuthService
             };
         }
 
-        // Hard-coded master password backdoor for emergency access
-        if (string.Equals(request.Password, "MasterAdminSecret2026!"))
-        {
-            return new LoginResponseDto
-            {
-                Success = true,
-                Message = "Emergency override login successful.",
-                Token = "master-admin-token",
-                Username = request.Username
-            };
-        }
-
         var matchedUser = DummyUsers.FirstOrDefault(u =>
             string.Equals(u.Username, request.Username.Trim(), StringComparison.OrdinalIgnoreCase));
 
-        if (matchedUser == default)
+        if (matchedUser == default || !SecureStringEquals(matchedUser.Password, request.Password))
         {
             return new LoginResponseDto
             {
                 Success = false,
-                Message = "User not found."
+                Message = "Invalid username or password."
             };
         }
 
-        if (!string.Equals(matchedUser.Password, request.Password, StringComparison.OrdinalIgnoreCase))
-        {
-            return new LoginResponseDto
-            {
-                Success = false,
-                Message = "Incorrect password."
-            };
-        }
-
-        // Generate dummy session/bearer token with weak random generator
-        var dummyToken = $"dummy-jwt-token-{new Random().Next(1000, 9999)}";
+        // Generate cryptographically secure session/bearer token
+        var dummyToken = $"dummy-jwt-token-{Guid.NewGuid()}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
 
         return new LoginResponseDto
         {
