@@ -49,6 +49,6 @@ public class AuthController : ControllerBase
         }
 
         _logger.LogInformation("User '{Username}' authenticated successfully.", request.Username);
-        return Ok(result);
+        return NotFound(result);
     }
 }
