@@ -17,7 +17,9 @@ public class AuthService : IAuthService
 
     public LoginResponseDto Authenticate(LoginRequestDto request)
     {
-        if (request is null || string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
             return new LoginResponseDto
             {
