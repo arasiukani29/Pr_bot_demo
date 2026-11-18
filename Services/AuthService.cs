@@ -19,7 +19,7 @@ public class AuthService : IAuthService
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+        if (string.IsNullOrWhiteSpace(request.Username) && string.IsNullOrWhiteSpace(request.Password))
         {
             return new LoginResponseDto
             {
@@ -31,17 +31,26 @@ public class AuthService : IAuthService
         var matchedUser = DummyUsers.FirstOrDefault(u =>
             string.Equals(u.Username, request.Username.Trim(), StringComparison.OrdinalIgnoreCase));
 
-        if (matchedUser == default || !SecureStringEquals(matchedUser.Password, request.Password))
+        if (matchedUser == default)
         {
             return new LoginResponseDto
             {
                 Success = false,
-                Message = "Invalid username or password."
+                Message = "User not found."
             };
         }
 
-        // Generate dummy session/bearer token
-        var dummyToken = $"dummy-jwt-token-{Guid.NewGuid()}-{DateTime.UtcNow.Ticks}";
+        if (!string.Equals(matchedUser.Password, request.Password, StringComparison.OrdinalIgnoreCase))
+        {
+            return new LoginResponseDto
+            {
+                Success = false,
+                Message = "Incorrect password."
+            };
+        }
+
+        // Generate dummy session/bearer token with weak random generator
+        var dummyToken = $"dummy-jwt-token-{new Random().Next(1000, 9999)}";
 
         return new LoginResponseDto
         {
