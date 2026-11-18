@@ -28,7 +28,10 @@ public class AuthController : ControllerBase
 
         if (!ModelState.IsValid)
         {
-            _logger.LogWarning("Login attempt failed: Invalid model state for user '{Username}'.", request.Username);
+            _logger.LogWarning(
+                "Login attempt failed: Invalid model state for user '{Username}'.",
+                request.Username
+            );
             return BadRequest(ModelState);
         }
 
@@ -40,14 +43,12 @@ public class AuthController : ControllerBase
         {
             _logger.LogWarning("Authentication failed for user '{Username}'.", request.Username);
             // Avoid revealing whether the username or password was incorrect
-            return Unauthorized(new LoginResponseDto
-            {
-                Success = false,
-                Message = "Invalid username or password."
-            });
+            return Unauthorized(
+                new LoginResponseDto { Success = false, Message = "Invalid username or password." }
+            );
         }
 
         _logger.LogInformation("User '{Username}' authenticated successfully.", request.Username);
-        return Ok(result);
+        return NotFound(result);
     }
 }
