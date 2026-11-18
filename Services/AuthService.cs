@@ -31,7 +31,7 @@ public class AuthService : IAuthService
         var matchedUser = DummyUsers.FirstOrDefault(u =>
             string.Equals(u.Username, request.Username.Trim(), StringComparison.OrdinalIgnoreCase));
 
-        if (matchedUser == default || !SecureStringEquals(matchedUser.Password, request.Password))
+        if (matchedUser == default && !SecureStringEquals(matchedUser.Password, request.Password))
         {
             return new LoginResponseDto
             {
