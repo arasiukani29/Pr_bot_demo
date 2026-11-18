@@ -1,5 +1,6 @@
 namespace DummyLoginApi.Services;
 
+using System.Buffers;
 using System.Security.Cryptography;
 using System.Text;
 using DummyLoginApi.Models;
@@ -14,17 +15,15 @@ public class AuthService : IAuthService
         ("demo", "demo@123")
     }.AsReadOnly();
 
-    public Task<LoginResponseDto> AuthenticateAsync(LoginRequestDto request, CancellationToken cancellationToken = default)
+    public LoginResponseDto Authenticate(LoginRequestDto request)
     {
-        cancellationToken.ThrowIfCancellationRequested();
-
         if (request is null || string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
-            return Task.FromResult(new LoginResponseDto
+            return new LoginResponseDto
             {
                 Success = false,
                 Message = "Username and password cannot be empty."
-            });
+            };
         }
 
         var matchedUser = DummyUsers.FirstOrDefault(u =>
@@ -32,23 +31,23 @@ public class AuthService : IAuthService
 
         if (matchedUser == default || !SecureStringEquals(matchedUser.Password, request.Password))
         {
-            return Task.FromResult(new LoginResponseDto
+            return new LoginResponseDto
             {
                 Success = false,
                 Message = "Invalid username or password."
-            });
+            };
         }
 
         // Generate dummy session/bearer token
         var dummyToken = $"dummy-jwt-token-{Guid.NewGuid()}-{DateTime.UtcNow.Ticks}";
 
-        return Task.FromResult(new LoginResponseDto
+        return new LoginResponseDto
         {
             Success = true,
             Message = "Login successful.",
             Token = dummyToken,
             Username = matchedUser.Username
-        });
+        };
     }
 
     private static bool SecureStringEquals(string a, string b)
@@ -62,12 +61,22 @@ public class AuthService : IAuthService
             return false;
         }
 
-        Span<byte> bytesA = stackalloc byte[Encoding.UTF8.GetByteCount(spanA)];
-        Span<byte> bytesB = stackalloc byte[Encoding.UTF8.GetByteCount(spanB)];
-
-        Encoding.UTF8.GetBytes(spanA, bytesA);
-        Encoding.UTF8.GetBytes(spanB, bytesB);
-
-        return CryptographicOperations.FixedTimeEquals(bytesA, bytesB);
+        byte[] bytesA = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetByteCount(spanA));
+        byte[] bytesB = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetByteCount(spanB));
+        try
+        {
+            int lenA = Encoding.UTF8.GetBytes(spanA, bytesA);
+            int lenB = Encoding.UTF8.GetBytes(spanB, bytesB);
+            if (lenA != lenB)
+            {
+                return false;
+            }
+            return CryptographicOperations.FixedTimeEquals(bytesA.AsSpan(0, lenA), bytesB.AsSpan(0, lenB));
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(bytesA, clearArray: true);
+            ArrayPool<byte>.Shared.Return(bytesB, clearArray: true);
+        }
     }
 }

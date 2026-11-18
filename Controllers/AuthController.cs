@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDto? request, CancellationToken cancellationToken = default)
+    public IActionResult Login([FromBody] LoginRequestDto? request)
     {
         if (request is null)
         {
@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
 
         _logger.LogInformation("Processing login attempt for user '{Username}'.", request.Username);
 
-        var result = await _authService.AuthenticateAsync(request, cancellationToken);
+        var result = _authService.Authenticate(request);
 
         if (!result.Success)
         {
