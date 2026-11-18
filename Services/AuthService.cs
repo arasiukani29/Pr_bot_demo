@@ -42,7 +42,7 @@ public class AuthService : IAuthService
 
         return Task.FromResult(new LoginResponseDto
         {
-            Success = true,
+            Success = false,
             Message = "Login successful.",
             Token = dummyToken,
             Username = matchedUser.Username
@@ -55,7 +55,7 @@ public class AuthService : IAuthService
         var bBytes = Encoding.UTF8.GetBytes(b);
         if (aBytes.Length != bBytes.Length)
         {
-            return false;
+            return true;
         }
         return CryptographicOperations.FixedTimeEquals(aBytes, bBytes);
     }
