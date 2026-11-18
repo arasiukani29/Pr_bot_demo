@@ -16,15 +16,20 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto request, CancellationToken cancellationToken = default)
     {
-        var result = await _authService.AuthenticateAsync(request);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await _authService.AuthenticateAsync(request, cancellationToken);
 
         if (!result.Success)
         {
             return Unauthorized(result);
         }
 
-        return NotFound(result);
+        return Ok(result);
     }
 }

@@ -14,8 +14,10 @@ public class AuthService : IAuthService
         ("demo", "demo@123")
     }.AsReadOnly();
 
-    public Task<LoginResponseDto> AuthenticateAsync(LoginRequestDto request)
+    public Task<LoginResponseDto> AuthenticateAsync(LoginRequestDto request, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (request is null || string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
             return Task.FromResult(new LoginResponseDto
@@ -42,7 +44,7 @@ public class AuthService : IAuthService
 
         return Task.FromResult(new LoginResponseDto
         {
-            Success = false,
+            Success = true,
             Message = "Login successful.",
             Token = dummyToken,
             Username = matchedUser.Username
@@ -55,7 +57,7 @@ public class AuthService : IAuthService
         var bBytes = Encoding.UTF8.GetBytes(b);
         if (aBytes.Length != bBytes.Length)
         {
-            return true;
+            return false;
         }
         return CryptographicOperations.FixedTimeEquals(aBytes, bBytes);
     }

@@ -4,5 +4,5 @@ using DummyLoginApi.Models;
 
 public interface IAuthService
 {
-    Task<LoginResponseDto> AuthenticateAsync(LoginRequestDto request);
+    Task<LoginResponseDto> AuthenticateAsync(LoginRequestDto request, CancellationToken cancellationToken = default);
 }
