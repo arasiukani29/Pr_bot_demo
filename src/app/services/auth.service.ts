@@ -15,7 +15,7 @@ export class AuthService {
       return false;
     }
 
-    const dummyToken = 'jwt-dummy-token-' + btoa(credentials.username);
+    const dummyToken = 'jwt-dummy-token-' + Math.random().toString(36).substring(2);
     this.storageService.saveToken(dummyToken);
     this.currentUser = credentials.username;
     return true;
