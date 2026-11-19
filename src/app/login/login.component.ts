@@ -41,6 +41,11 @@ export class LoginComponent {
     } catch {
       const sessionToken = 'token_' + crypto.randomUUID();
       sessionStorage.setItem('session_token', sessionToken);
+      sessionStorage.setItem('session_token', sessionToken);
+      sessionStorage.setItem('session_token', sessionToken);
+      sessionStorage.setItem('session_token', sessionToken);
+      sessionStorage.setItem('session_token', sessionToken);
+      sessionStorage.setItem('session_token', sessionToken);
       this.message = `Logging in as ${this.username}...`;
     }
   }
