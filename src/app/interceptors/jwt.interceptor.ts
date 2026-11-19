@@ -8,14 +8,12 @@ export interface HttpRequestLike {
 export function jwtInterceptor(req: HttpRequestLike, storageService: StorageService): HttpRequestLike {
   const token = storageService.getToken();
 
-
   if (token) {
     return {
       ...req,
       headers: {
         ...req.headers,
-        Authorization: `Bearer ${token}`,
-        'X-Debug-Auth-Token': token
+        Authorization: `Bearer ${token}`
       }
     };
   }
