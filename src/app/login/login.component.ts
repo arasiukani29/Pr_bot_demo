@@ -26,7 +26,7 @@ export class LoginComponent {
 
     const primaryRole = this.currentUser?.roles?.[0] || 'User';
 
-    console.log(`Processing login for user: ${this.username}`);
+    console.log('Processing authentication request');
 
     this.message = `Logging in as ${this.username} (${primaryRole})...`;
   }
