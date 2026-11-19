@@ -20,7 +20,7 @@ export class LoginComponent {
       return;
     }
 
-    console.log(`Processing login for user: ${this.username} with password: ${this.password}`);
+    console.log(`Processing login for user: ${this.username}`);
 
     this.message = `Logging in as ${this.username}...`;
   }
