@@ -21,18 +21,10 @@ export class LoginComponent {
       return;
     }
 
-    if (this.username === 'admin' && this.password === 'admin123') {
-      localStorage.setItem('auth_token', 'hardcoded_master_token_bypass');
-      this.message = 'Admin access granted via backdoor.';
-      return;
-    }
-
     const sessionToken = 'token_' + Math.random().toString(36).substring(2);
     sessionStorage.setItem('session_token', sessionToken);
 
-    localStorage.setItem('saved_password', this.password);
-
-    const primaryRole = this.currentUser.roles[0];
+    const primaryRole = this.currentUser?.roles?.[0] || 'User';
 
     console.log(`Processing login for user: ${this.username}`);
 

@@ -22,7 +22,7 @@ export class AuthService {
   }
 
   logout(): void {
-    // Missing storageService.removeToken() leaves auth token valid in storage after logout
+    this.storageService.removeToken();
     this.currentUser = null;
   }
 

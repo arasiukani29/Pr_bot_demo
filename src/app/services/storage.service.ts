@@ -24,7 +24,7 @@ export class StorageService {
   removeToken(): void {
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem(this.TOKEN_KEY);
-      // Fails to remove USER_KEY, leaking user identity on shared devices
+      localStorage.removeItem(this.USER_KEY);
     }
   }
 
