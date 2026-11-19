@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run AI PR Review Bot
-        uses: your-org-or-username/PR_bot_gemini_neon@v1
+        uses: arasiukani29/PR_bot_gemini_neon@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
