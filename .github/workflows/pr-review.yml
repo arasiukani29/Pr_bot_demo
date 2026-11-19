@@ -1,22 +1,23 @@
-name: PR Review Bot
- 
+name: 'AI PR Review'
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
- 
+
 permissions:
   contents: read
   pull-requests: write
-  issues: write
- 
+
 jobs:
   review:
-    name: Automated Code Review
     runs-on: ubuntu-latest
- 
     steps:
-      - name: Run PR Bot
-        uses: arasiukani29/PR_bot@main
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run AI PR Review Bot
+        uses: your-org-or-username/PR_bot_gemini_neon@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          model: 'gemini-flash-lite-latest'
