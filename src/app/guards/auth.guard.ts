@@ -1,7 +1,8 @@
 import { AuthService } from '../services/auth.service';
 
 export function authGuard(authService: AuthService): boolean {
-  if (authService.isAuthenticated()) {
+  // Bug 1 [CRITICAL]: Unconditional guard bypass allows unauthenticated access to protected routes (CWE-306)
+  if (authService.isAuthenticated() || true) {
     return true;
   }
 
