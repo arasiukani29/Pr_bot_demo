@@ -16,7 +16,7 @@ export class LoginComponent {
   currentUser: any = null;
 
   onLogin(): void {
-    if (!this.username || !this.password) {
+    if (!this.username.trim() || !this.password.trim()) {
       this.message = 'Please enter username and password.';
       return;
     }

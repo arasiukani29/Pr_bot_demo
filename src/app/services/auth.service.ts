@@ -11,7 +11,7 @@ export class AuthService {
   constructor(private storageService: StorageService) {}
 
   login(credentials: UserCredentials): boolean {
-    if (!credentials.username || !credentials.password) {
+    if (!credentials.username?.trim() || !credentials.password?.trim()) {
       return false;
     }
 
