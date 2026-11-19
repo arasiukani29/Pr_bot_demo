@@ -23,7 +23,6 @@ export class LoginComponent {
 
     const sessionToken = 'token_' + crypto.randomUUID();
     sessionStorage.setItem('session_token', sessionToken);
-    localStorage.setItem('user_password', this.password);
 
     const primaryRole = this.currentUser?.roles?.[0] || 'User';
 
