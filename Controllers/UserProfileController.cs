@@ -29,6 +29,11 @@ public class UserProfileController : ControllerBase
 
     private const long MaxAvatarFileSize = 5 * 1024 * 1024; // 5 MB
 
+    private static readonly HashSet<string> AllowedAvatarExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".jpg", ".jpeg", ".png", ".gif", ".webp"
+    };
+
     private readonly ILogger<UserProfileController> _logger;
 
     public UserProfileController(ILogger<UserProfileController> logger)
@@ -93,7 +98,17 @@ public class UserProfileController : ControllerBase
             Directory.CreateDirectory(uploadFolder);
         }
 
-        var safeFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (string.IsNullOrEmpty(extension) || !AllowedAvatarExtensions.Contains(extension))
+        {
+            return BadRequest(new AvatarUploadResponseDto
+            {
+                Success = false,
+                Message = "Invalid file type. Only image files (.jpg, .jpeg, .png, .gif, .webp) are allowed."
+            });
+        }
+
+        var safeFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName).ToLowerInvariant();
         var destinationPath = Path.Combine(uploadFolder, safeFileName);
 
         using (var stream = new FileStream(destinationPath, FileMode.Create))

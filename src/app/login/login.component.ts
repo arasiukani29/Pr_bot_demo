@@ -25,7 +25,7 @@ export class LoginComponent {
     const sessionToken = 'token_' + crypto.randomUUID();
     sessionStorage.setItem('session_token', sessionToken);
 
-    const primaryRole = this.currentUser?.roles?.[0] || 'User';
+    const primaryRole = 'User';
 
     console.log('Processing authentication request');
 

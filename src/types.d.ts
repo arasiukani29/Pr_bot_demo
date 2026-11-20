@@ -1,6 +1,6 @@
 declare module '@angular/core' {
-  export function Component(options: any): ClassDecorator;
-  export function Injectable(options?: any): ClassDecorator;
+  export function Component(options: Record<string, unknown>): ClassDecorator;
+  export function Injectable(options?: Record<string, unknown>): ClassDecorator;
 }
 
 declare module '@angular/common' {

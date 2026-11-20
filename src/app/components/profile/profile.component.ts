@@ -43,7 +43,8 @@ export class ProfileComponent {
         this.profile.avatarUrl = response.avatarUrl;
         this.statusMessage = 'Avatar updated successfully.';
       }
-    } catch {
+    } catch (error) {
+      console.error('Avatar upload failed:', error);
       this.statusMessage = 'Failed to upload avatar image.';
     } finally {
       this.isUploading = false;
