@@ -21,8 +21,9 @@ export class ProfileComponent {
     this.profile = this.profileService.getProfile('admin');
   }
 
-  onFileSelected(event: any): void {
-    const files = event.target?.files;
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    const files = input?.files;
     if (files && files.length > 0) {
       this.selectedFile = files[0];
       this.statusMessage = `Selected file: ${this.selectedFile?.name}`;

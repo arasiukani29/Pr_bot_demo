@@ -60,7 +60,7 @@
 
     <div class="bio-preview-card" *ngIf="profile.bio">
       <h4>Bio Live Preview:</h4>
-      <div class="bio-content" [innerHTML]="profile.bio"></div>
+      <div class="bio-content">{{ profile.bio }}</div>
     </div>
 
     <button type="submit" class="save-btn">Save Changes</button>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent {
   username = '';
   password = '';
   message = '';
-  currentUser: any = null;
+  currentUser: User | null = null;
 
   onLogin(): void {
     if (!this.username.trim() || !this.password.trim()) {

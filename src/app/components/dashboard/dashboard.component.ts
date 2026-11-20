@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 export interface DashboardStat {
   label: string;
@@ -42,11 +43,20 @@ export interface DashboardStat {
     }
   `]
 })
-export class DashboardComponent {
-  userName = 'Admin';
+export class DashboardComponent implements OnInit {
+  userName = 'Standard User';
   stats: DashboardStat[] = [
     { label: 'Active Users', value: 128 },
     { label: 'Total PRs', value: 45 },
     { label: 'Pending Reviews', value: 3 }
   ];
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userName = user;
+    }
+  }
 }

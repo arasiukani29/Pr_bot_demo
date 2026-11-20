@@ -27,6 +27,8 @@ public class UserProfileController : ControllerBase
         }
     };
 
+    private const long MaxAvatarFileSize = 5 * 1024 * 1024; // 5 MB
+
     private readonly ILogger<UserProfileController> _logger;
 
     public UserProfileController(ILogger<UserProfileController> logger)
@@ -76,20 +78,30 @@ public class UserProfileController : ControllerBase
             });
         }
 
+        if (file.Length > MaxAvatarFileSize)
+        {
+            return BadRequest(new AvatarUploadResponseDto
+            {
+                Success = false,
+                Message = "File size exceeds the maximum allowed limit of 5 MB."
+            });
+        }
+
         var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads", "avatars");
         if (!Directory.Exists(uploadFolder))
         {
             Directory.CreateDirectory(uploadFolder);
         }
 
-        var destinationPath = Path.Combine(uploadFolder, file.FileName);
+        var safeFileName = Path.GetFileName(file.FileName);
+        var destinationPath = Path.Combine(uploadFolder, safeFileName);
 
         using (var stream = new FileStream(destinationPath, FileMode.Create))
         {
             await file.CopyToAsync(stream);
         }
 
-        var avatarUrl = $"/uploads/avatars/{file.FileName}";
+        var avatarUrl = $"/uploads/avatars/{safeFileName}";
 
         if (!string.IsNullOrWhiteSpace(username) && Profiles.TryGetValue(username.Trim(), out var profile))
         {
