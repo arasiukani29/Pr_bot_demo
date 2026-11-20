@@ -165,10 +165,8 @@ public class UserProfileController : ControllerBase
         var safeFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName).ToLowerInvariant();
         var destinationPath = Path.Combine(uploadFolder, safeFileName);
 
-        using (var stream = new FileStream(destinationPath, FileMode.Create))
-        {
-            await file.CopyToAsync(stream);
-        }
+        await using var stream = new FileStream(destinationPath, FileMode.Create);
+        await file.CopyToAsync(stream);
 
         var avatarUrl = $"/uploads/avatars/{safeFileName}";
 
