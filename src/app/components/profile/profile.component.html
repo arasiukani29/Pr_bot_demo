@@ -1,0 +1,70 @@
+<div class="profile-container">
+  <h2>User Profile Settings</h2>
+
+  <div class="avatar-section">
+    <div class="avatar-preview">
+      <img [src]="profile.avatarUrl || 'https://via.placeholder.com/150'" alt="User Avatar" />
+    </div>
+
+    <div class="avatar-upload-controls">
+      <label for="avatarInput" class="upload-label">Choose Avatar Image:</label>
+      <input
+        type="file"
+        id="avatarInput"
+        (change)="onFileSelected($event)"
+      />
+      <button type="button" (click)="onUploadAvatar()" [disabled]="isUploading || !selectedFile">
+        {{ isUploading ? 'Uploading...' : 'Upload Avatar' }}
+      </button>
+    </div>
+  </div>
+
+  <form (ngSubmit)="onSaveProfile()" class="profile-form">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" id="username" [value]="profile.username" disabled />
+    </div>
+
+    <div class="form-group">
+      <label for="displayName">Display Name:</label>
+      <input
+        type="text"
+        id="displayName"
+        name="displayName"
+        [(ngModel)]="profile.displayName"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="profile.email"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="bio">Bio / About Me:</label>
+      <textarea
+        id="bio"
+        name="bio"
+        rows="4"
+        [(ngModel)]="profile.bio"
+        placeholder="Write a brief intro..."
+      ></textarea>
+    </div>
+
+    <div class="bio-preview-card" *ngIf="profile.bio">
+      <h4>Bio Live Preview:</h4>
+      <div class="bio-content" [innerHTML]="profile.bio"></div>
+    </div>
+
+    <button type="submit" class="save-btn">Save Changes</button>
+  </form>
+
+  <p *ngIf="statusMessage" class="status-msg">{{ statusMessage }}</p>
+</div>

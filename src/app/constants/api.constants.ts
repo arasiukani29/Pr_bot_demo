@@ -5,5 +5,10 @@ export const API_ENDPOINTS = {
     LOGOUT: '/api/auth/logout',
     REFRESH: '/api/auth/refresh',
     PROFILE: '/api/auth/profile'
+  },
+  USER_PROFILE: {
+    GET: (username: string) => `/api/userprofile/${username}`,
+    UPDATE: '/api/userprofile',
+    UPLOAD_AVATAR: '/api/userprofile/avatar'
   }
 } as const;
