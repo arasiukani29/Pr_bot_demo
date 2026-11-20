@@ -93,7 +93,7 @@ public class UserProfileController : ControllerBase
             Directory.CreateDirectory(uploadFolder);
         }
 
-        var safeFileName = Path.GetFileName(file.FileName);
+        var safeFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
         var destinationPath = Path.Combine(uploadFolder, safeFileName);
 
         using (var stream = new FileStream(destinationPath, FileMode.Create))
