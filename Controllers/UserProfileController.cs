@@ -165,7 +165,7 @@ public class UserProfileController : ControllerBase
         var safeFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName).ToLowerInvariant();
         var destinationPath = Path.Combine(uploadFolder, safeFileName);
 
-        await using var stream = new FileStream(destinationPath, FileMode.Create);
+        await using var stream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, useAsync: true);
         await file.CopyToAsync(stream);
 
         var avatarUrl = $"/uploads/avatars/{safeFileName}";
@@ -185,31 +185,11 @@ public class UserProfileController : ControllerBase
 
     private string? GetAuthenticatedUsername()
     {
-        var identityName = User.Identity?.Name ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (!string.IsNullOrWhiteSpace(identityName))
+        if (User.Identity?.IsAuthenticated == true && !string.IsNullOrWhiteSpace(User.Identity.Name))
         {
-            return identityName;
+            return User.Identity.Name;
         }
 
-        var authHeader = Request.Headers.Authorization.FirstOrDefault();
-        if (!string.IsNullOrWhiteSpace(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-        {
-            var token = authHeader.Substring("Bearer ".Length).Trim();
-            if (token.StartsWith("jwt-dummy-token-", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    var base64Part = token.Substring("jwt-dummy-token-".Length);
-                    return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(base64Part));
-                }
-                catch
-                {
-                    // Ignore decoding error
-                }
-            }
-            return token;
-        }
-
-        return null;
+        return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst(ClaimTypes.Name)?.Value;
     }
 }

@@ -52,8 +52,13 @@ export class ProfileComponent {
   }
 
   onSaveProfile(): void {
-    if (!this.profile.displayName.trim() || !this.profile.email.trim()) {
-      this.statusMessage = 'Display name and email are required.';
+    if (!this.profile.displayName?.trim() || !this.profile.email?.trim() || this.profile.displayName.length > 100 || this.profile.email.length > 150) {
+      this.statusMessage = 'Display name (max 100) and email (max 150) are required.';
+      return;
+    }
+
+    if (this.profile.bio && this.profile.bio.length > 500) {
+      this.statusMessage = 'Bio cannot exceed 500 characters.';
       return;
     }
 
