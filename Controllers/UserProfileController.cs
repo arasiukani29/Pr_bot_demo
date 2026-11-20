@@ -1,7 +1,9 @@
 namespace DummyLoginApi.Controllers;
 
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using DummyLoginApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -58,12 +60,25 @@ public class UserProfileController : ControllerBase
         return NotFound(new { message = $"Profile for '{username}' was not found." });
     }
 
+    [Authorize]
     [HttpPut]
     public IActionResult UpdateProfile([FromBody] UserProfileDto updatedProfile)
     {
         if (updatedProfile is null || string.IsNullOrWhiteSpace(updatedProfile.Username))
         {
             return BadRequest(new { message = "Invalid profile payload." });
+        }
+
+        var authenticatedUser = GetAuthenticatedUsername();
+        if (string.IsNullOrWhiteSpace(authenticatedUser))
+        {
+            return Unauthorized(new { message = "Authentication token or identity is required." });
+        }
+
+        if (!string.Equals(authenticatedUser, updatedProfile.Username.Trim(), StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(authenticatedUser, "admin", StringComparison.OrdinalIgnoreCase))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = "You do not have permission to modify this profile." });
         }
 
         if (updatedProfile.Username.Length > 50 ||
@@ -87,9 +102,32 @@ public class UserProfileController : ControllerBase
         return Ok(new { message = "Profile updated successfully.", profile = updatedProfile });
     }
 
+    [Authorize]
     [HttpPost("avatar")]
-    public async Task<IActionResult> UploadAvatar([FromForm] IFormFile? file, [FromQuery] string username)
+    public async Task<IActionResult> UploadAvatar([FromForm] IFormFile? file, [FromQuery] string? username)
     {
+        var authenticatedUser = GetAuthenticatedUsername();
+        if (string.IsNullOrWhiteSpace(authenticatedUser))
+        {
+            return Unauthorized(new AvatarUploadResponseDto
+            {
+                Success = false,
+                Message = "Authentication is required to upload an avatar."
+            });
+        }
+
+        var targetUsername = string.IsNullOrWhiteSpace(username) ? authenticatedUser : username.Trim();
+
+        if (!string.Equals(authenticatedUser, targetUsername, StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(authenticatedUser, "admin", StringComparison.OrdinalIgnoreCase))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new AvatarUploadResponseDto
+            {
+                Success = false,
+                Message = "You do not have permission to update another user's avatar."
+            });
+        }
+
         if (file is null || file.Length == 0)
         {
             return BadRequest(new AvatarUploadResponseDto
@@ -134,7 +172,7 @@ public class UserProfileController : ControllerBase
 
         var avatarUrl = $"/uploads/avatars/{safeFileName}";
 
-        if (!string.IsNullOrWhiteSpace(username) && Profiles.TryGetValue(username.Trim(), out var profile))
+        if (Profiles.TryGetValue(targetUsername, out var profile))
         {
             profile.AvatarUrl = avatarUrl;
         }
@@ -145,5 +183,35 @@ public class UserProfileController : ControllerBase
             Message = "Avatar image uploaded successfully.",
             AvatarUrl = avatarUrl
         });
+    }
+
+    private string? GetAuthenticatedUsername()
+    {
+        var identityName = User.Identity?.Name ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!string.IsNullOrWhiteSpace(identityName))
+        {
+            return identityName;
+        }
+
+        var authHeader = Request.Headers.Authorization.FirstOrDefault();
+        if (!string.IsNullOrWhiteSpace(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+        {
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+            if (token.StartsWith("jwt-dummy-token-", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var base64Part = token.Substring("jwt-dummy-token-".Length);
+                    return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(base64Part));
+                }
+                catch
+                {
+                    // Ignore decoding error
+                }
+            }
+            return token;
+        }
+
+        return null;
     }
 }
