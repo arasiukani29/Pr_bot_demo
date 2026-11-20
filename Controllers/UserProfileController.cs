@@ -1,5 +1,6 @@
 namespace DummyLoginApi.Controllers;
 
+using System.ComponentModel.DataAnnotations;
 using DummyLoginApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,6 +64,21 @@ public class UserProfileController : ControllerBase
         if (updatedProfile is null || string.IsNullOrWhiteSpace(updatedProfile.Username))
         {
             return BadRequest(new { message = "Invalid profile payload." });
+        }
+
+        if (updatedProfile.Username.Length > 50 ||
+            (updatedProfile.DisplayName?.Length ?? 0) > 100 ||
+            (updatedProfile.Email?.Length ?? 0) > 150 ||
+            (updatedProfile.Bio?.Length ?? 0) > 500 ||
+            (updatedProfile.AvatarUrl?.Length ?? 0) > 2048)
+        {
+            return BadRequest(new { message = "Profile fields exceed maximum allowed character limits." });
+        }
+
+        if (string.IsNullOrWhiteSpace(updatedProfile.Email) ||
+            !new EmailAddressAttribute().IsValid(updatedProfile.Email.Trim()))
+        {
+            return BadRequest(new { message = "A valid email format is required." });
         }
 
         var key = updatedProfile.Username.Trim();
