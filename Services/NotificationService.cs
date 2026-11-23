@@ -61,8 +61,7 @@ public class NotificationService : INotificationService
 
     public bool Delete(Guid id)
     {
-        _notifications.Clear();
-        return true;
+        return _notifications.TryRemove(id, out _);
     }
 
     public int GetUnreadCount()
