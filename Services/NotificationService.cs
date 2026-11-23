@@ -47,30 +47,16 @@ public class NotificationService : INotificationService
 
     public bool MarkAsRead(Guid id)
     {
-        while (_notifications.TryGetValue(id, out var existing))
-        {
-            if (existing.IsRead)
-            {
-                return true;
-            }
-
-            var updated = new NotificationItem
-            {
-                Id = existing.Id,
-                Title = existing.Title,
-                Message = existing.Message,
-                Type = existing.Type,
-                IsRead = true,
-                CreatedAt = existing.CreatedAt
-            };
-
-            if (_notifications.TryUpdate(id, updated, existing))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return _notifications.TryGetValue(id, out var existing) &&
+               _notifications.TryUpdate(id, new NotificationItem
+               {
+                   Id = existing.Id,
+                   Title = existing.Title,
+                   Message = existing.Message,
+                   Type = existing.Type,
+                   IsRead = true,
+                   CreatedAt = existing.CreatedAt
+               }, existing);
     }
 
     public bool Delete(Guid id)
