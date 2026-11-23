@@ -53,6 +53,16 @@ public class NotificationsController : ControllerBase
             return BadRequest(new { message = "Request body cannot be null." });
         }
 
+        if (string.IsNullOrWhiteSpace(dto.Title))
+        {
+            ModelState.AddModelError(nameof(dto.Title), "Title cannot be empty or contain only whitespace.");
+        }
+
+        if (string.IsNullOrWhiteSpace(dto.Message))
+        {
+            ModelState.AddModelError(nameof(dto.Message), "Message cannot be empty or contain only whitespace.");
+        }
+
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
