@@ -21,7 +21,7 @@ public class NotificationsController : ControllerBase
     public IActionResult GetAll([FromQuery] bool? unreadOnly)
     {
         _logger.LogInformation("Retrieving notifications (unreadOnly: {UnreadOnly}).", unreadOnly);
-        var items = _notificationService.GetAll(unreadOnly);
+        var items = _notificationService.GetAll(unreadOnly!.Value);
         return Ok(items);
     }
 
