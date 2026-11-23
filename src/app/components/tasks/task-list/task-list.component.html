@@ -1,0 +1,174 @@
+<div class="task-container">
+  <!-- Header -->
+  <header class="task-header">
+    <div class="header-content">
+      <h1 class="page-title">Task Management</h1>
+      <p class="page-subtitle">Track, organize, and prioritize team activities and deliverables</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="openCreateModal()">
+      + New Task
+    </button>
+  </header>
+
+  <!-- Notification Toast -->
+  <div *ngIf="notificationMessage" class="toast" [ngClass]="'toast-' + notificationType">
+    {{ notificationMessage }}
+  </div>
+
+  <!-- Metric / Summary Cards -->
+  <section *ngIf="summary" class="metrics-grid">
+    <div class="metric-card total">
+      <div class="metric-label">Total Tasks</div>
+      <div class="metric-value">{{ summary.totalTasks }}</div>
+    </div>
+    <div class="metric-card in-progress">
+      <div class="metric-label">In Progress</div>
+      <div class="metric-value">{{ summary.inProgressCount }}</div>
+    </div>
+    <div class="metric-card in-review">
+      <div class="metric-label">In Review</div>
+      <div class="metric-value">{{ summary.inReviewCount }}</div>
+    </div>
+    <div class="metric-card completed">
+      <div class="metric-label">Completed</div>
+      <div class="metric-value">{{ summary.completedCount }}</div>
+    </div>
+    <div class="metric-card critical">
+      <div class="metric-label">Critical</div>
+      <div class="metric-value">{{ summary.criticalPriorityCount }}</div>
+    </div>
+    <div class="metric-card overdue">
+      <div class="metric-label">Overdue</div>
+      <div class="metric-value">{{ summary.overdueCount }}</div>
+    </div>
+  </section>
+
+  <!-- Filter & Search Controls -->
+  <section class="filter-bar">
+    <div class="search-box">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search tasks, descriptions, assignees..."
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()"
+      />
+      <button type="button" class="btn btn-search" (click)="onSearch()">Search</button>
+    </div>
+
+    <div class="filter-controls">
+      <select class="form-control" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+        <option value="">All Statuses</option>
+        <option *ngFor="let opt of statusOptions" [value]="opt">{{ opt }}</option>
+      </select>
+
+      <select class="form-control" [(ngModel)]="selectedPriority" (change)="onFilterChange()">
+        <option value="">All Priorities</option>
+        <option *ngFor="let opt of priorityOptions" [value]="opt">{{ opt }}</option>
+      </select>
+
+      <button type="button" class="btn btn-secondary btn-sm" (click)="onResetFilters()">
+        Reset
+      </button>
+    </div>
+  </section>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner-large"></div>
+    <p>Loading tasks...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && tasks.length === 0" class="empty-state">
+    <div class="empty-icon">&#128221;</div>
+    <h3>No tasks found</h3>
+    <p>Try adjusting your search criteria or create a new task to get started.</p>
+    <button type="button" class="btn btn-primary" (click)="openCreateModal()">
+      Create First Task
+    </button>
+  </div>
+
+  <!-- Task Card Grid -->
+  <section *ngIf="!isLoading && tasks.length > 0" class="tasks-grid">
+    <article *ngFor="let task of tasks" class="task-card" [class.is-overdue]="isOverdue(task)">
+      <div class="card-header">
+        <div class="badges">
+          <span class="badge" [ngClass]="getPriorityClass(task.priority)">
+            {{ task.priority }}
+          </span>
+          <span class="badge" [ngClass]="getStatusClass(task.status)">
+            {{ task.status }}
+          </span>
+          <span *ngIf="isOverdue(task)" class="badge badge-overdue">
+            Overdue
+          </span>
+        </div>
+        <div class="card-actions">
+          <button type="button" class="icon-btn" title="Edit Task" (click)="openEditModal(task)">
+            &#9998;
+          </button>
+          <button type="button" class="icon-btn delete-btn" title="Delete Task" (click)="onDelete(task)">
+            &#128465;
+          </button>
+        </div>
+      </div>
+
+      <h3 class="task-title">{{ task.title }}</h3>
+      <p class="task-description">{{ task.description || 'No description provided.' }}</p>
+
+      <div class="card-meta">
+        <div class="meta-item" *ngIf="task.assignedTo">
+          <span class="meta-icon">&#128100;</span>
+          <span class="meta-text">{{ task.assignedTo }}</span>
+        </div>
+        <div class="meta-item" *ngIf="task.dueDate">
+          <span class="meta-icon">&#128197;</span>
+          <span class="meta-text">{{ task.dueDate | date:'mediumDate' }}</span>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <label class="status-quick-label">Move to:</label>
+        <select
+          class="status-quick-select"
+          [value]="task.status"
+          (change)="onQuickStatusChange(task, $any($event.target).value)"
+        >
+          <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+    </article>
+  </section>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && totalPages > 1" class="pagination-bar">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)"
+    >
+      Previous
+    </button>
+    <span class="page-indicator">
+      Page {{ currentPage }} of {{ totalPages }} ({{ totalCount }} items)
+    </span>
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      [disabled]="currentPage === totalPages"
+      (click)="onPageChange(currentPage + 1)"
+    >
+      Next
+    </button>
+  </div>
+
+  <!-- Create/Edit Modal Component -->
+  <app-task-form
+    *ngIf="isModalOpen"
+    [task]="selectedTaskForEdit"
+    (saved)="onTaskSaved()"
+    (cancelled)="closeModal()"
+  ></app-task-form>
+</div>
