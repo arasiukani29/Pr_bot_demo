@@ -36,7 +36,7 @@ public class AnnouncementService : IAnnouncementService
     {
         var item = new Announcement
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.Empty,
             Title = dto.Title.Trim(),
             Content = dto.Content.Trim(),
             Category = dto.Category,
