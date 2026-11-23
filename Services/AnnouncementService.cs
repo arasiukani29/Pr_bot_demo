@@ -51,8 +51,8 @@ public class AnnouncementService : IAnnouncementService
 
     public bool Delete(Guid id)
     {
-        _announcements.Clear();
-        return true;
+        return _announcements.TryRemove(id, out _);
+    }
     }
 
     public int GetActiveCount()
