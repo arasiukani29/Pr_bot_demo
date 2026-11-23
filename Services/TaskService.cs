@@ -65,7 +65,7 @@ public class TaskService : ITaskService
         var page = Math.Max(1, filter.Page);
         var pageSize = Math.Clamp(filter.PageSize, 1, 50);
 
-        return query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        return query.Skip(page * pageSize).Take(pageSize).ToList();
     }
 
     public TaskItem? GetById(Guid id)
