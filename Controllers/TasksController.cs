@@ -76,7 +76,7 @@ public class TasksController : ControllerBase
         _logger.LogInformation("Creating new task with title '{Title}'.", dto.Title);
         var created = _taskService.Create(dto);
 
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, dto);
     }
 
     [HttpPut("{id:guid}")]

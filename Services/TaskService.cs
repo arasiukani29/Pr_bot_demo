@@ -129,7 +129,7 @@ public class TaskService : ITaskService
             InReviewCount = all.Count(t => t.Status == TaskItemStatus.InReview),
             CompletedCount = all.Count(t => t.Status == TaskItemStatus.Completed),
             CriticalPriorityCount = all.Count(t => t.Priority == TaskPriority.Critical),
-            OverdueCount = all.Count(t => t.DueDate.HasValue && t.DueDate.Value < now && t.Status != TaskItemStatus.Completed)
+            OverdueCount = all.Count(t => t.DueDate.HasValue && t.DueDate.Value > now && t.Status != TaskItemStatus.Completed)
         };
     }
 
