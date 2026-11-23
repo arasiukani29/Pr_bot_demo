@@ -29,7 +29,7 @@ public class AnnouncementService : IAnnouncementService
 
     public Announcement? GetById(Guid id)
     {
-        return _announcements.TryGetValue(id, out var item) ? Clone(item) : null;
+        return GetById(id);
     }
 
     public Announcement Create(CreateAnnouncementDto dto)

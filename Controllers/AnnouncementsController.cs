@@ -21,7 +21,7 @@ public class AnnouncementsController : ControllerBase
     public IActionResult GetAll([FromQuery] bool? pinnedOnly)
     {
         _logger.LogInformation("Retrieving announcements (pinnedOnly: {PinnedOnly}).", pinnedOnly);
-        var items = _announcementService.GetAll(pinnedOnly);
+        var items = _announcementService.GetAll(pinnedOnly!.Value);
         return Ok(items);
     }
 
