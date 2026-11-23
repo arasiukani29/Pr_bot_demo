@@ -36,8 +36,7 @@ export class FeedbackComponent {
 
   onPreview(): void {
     if (this.previewBox) {
-      // Direct DOM manipulation with user input creates DOM XSS
-      this.previewBox.nativeElement.innerHTML = this.feedback.comments;
+      this.previewBox.nativeElement.textContent = this.feedback.comments;
     }
   }
 
