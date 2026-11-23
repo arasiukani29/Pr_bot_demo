@@ -24,10 +24,12 @@ public class CreateNotificationDto
 {
     [Required(AllowEmptyStrings = false, ErrorMessage = "Title is required.")]
     [StringLength(100, MinimumLength = 2, ErrorMessage = "Title must be between 2 and 100 characters.")]
+    [RegularExpression(@"^(?!\s*$).+", ErrorMessage = "Title cannot contain only whitespace.")]
     public string Title { get; set; } = string.Empty;
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "Message is required.")]
     [StringLength(500, MinimumLength = 2, ErrorMessage = "Message must be between 2 and 500 characters.")]
+    [RegularExpression(@"^(?!\s*$).+", ErrorMessage = "Message cannot contain only whitespace.")]
     public string Message { get; set; } = string.Empty;
 
     public NotificationType Type { get; set; } = NotificationType.Info;

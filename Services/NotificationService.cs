@@ -21,12 +21,12 @@ public class NotificationService : INotificationService
             query = query.Where(n => !n.IsRead);
         }
 
-        return query.OrderByDescending(n => n.CreatedAt).ToList();
+        return query.OrderByDescending(n => n.CreatedAt).Select(Clone).ToList();
     }
 
     public NotificationItem? GetById(Guid id)
     {
-        return _notifications.TryGetValue(id, out var item) ? item : null;
+        return _notifications.TryGetValue(id, out var item) ? Clone(item) : null;
     }
 
     public NotificationItem Create(CreateNotificationDto dto)
@@ -42,19 +42,35 @@ public class NotificationService : INotificationService
         };
 
         _notifications[item.Id] = item;
-        return item;
+        return Clone(item);
     }
 
     public bool MarkAsRead(Guid id)
     {
-        if (!_notifications.TryGetValue(id, out var item))
+        while (_notifications.TryGetValue(id, out var existing))
         {
-            return false;
+            if (existing.IsRead)
+            {
+                return true;
+            }
+
+            var updated = new NotificationItem
+            {
+                Id = existing.Id,
+                Title = existing.Title,
+                Message = existing.Message,
+                Type = existing.Type,
+                IsRead = true,
+                CreatedAt = existing.CreatedAt
+            };
+
+            if (_notifications.TryUpdate(id, updated, existing))
+            {
+                return true;
+            }
         }
 
-        item.IsRead = true;
-        _notifications[id] = item;
-        return true;
+        return false;
     }
 
     public bool Delete(Guid id)
@@ -105,4 +121,14 @@ public class NotificationService : INotificationService
             _notifications[item.Id] = item;
         }
     }
+
+    private static NotificationItem Clone(NotificationItem item) => new()
+    {
+        Id = item.Id,
+        Title = item.Title,
+        Message = item.Message,
+        Type = item.Type,
+        IsRead = item.IsRead,
+        CreatedAt = item.CreatedAt
+    };
 }
