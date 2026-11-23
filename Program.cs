@@ -7,6 +7,7 @@ builder.Services.AddControllers();
 
 // Register application services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>
