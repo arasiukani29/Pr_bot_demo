@@ -31,7 +31,7 @@ public class TasksController : ControllerBase
             totalCount,
             page = filter.Page,
             pageSize = filter.PageSize,
-            totalPages = (int)Math.Ceiling((double)totalCount / Math.Max(1, filter.PageSize))
+            totalPages = filter.PageSize > 0 ? (int)Math.Ceiling((double)totalCount / filter.PageSize) : 1
         });
     }
 
