@@ -5,9 +5,9 @@ using DummyLoginApi.Models;
 
 public class TaskService : ITaskService
 {
-    private readonly ConcurrentDictionary<Guid, TaskItem> _tasks = new();
+    private static readonly ConcurrentDictionary<Guid, TaskItem> _tasks = new();
 
-    public TaskService()
+    static TaskService()
     {
         SeedInitialTasks();
     }
@@ -133,7 +133,7 @@ public class TaskService : ITaskService
         };
     }
 
-    private void SeedInitialTasks()
+    private static void SeedInitialTasks()
     {
         var seedTasks = new[]
         {

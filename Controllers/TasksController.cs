@@ -112,7 +112,7 @@ public class TasksController : ControllerBase
         _logger.LogInformation("Deleting task with ID '{TaskId}'.", id);
         var success = _taskService.Delete(id);
 
-        if (success)
+        if (!success)
         {
             _logger.LogWarning("Delete failed: Task with ID '{TaskId}' was not found.", id);
             return NotFound(new { message = $"Task with ID '{id}' was not found." });
