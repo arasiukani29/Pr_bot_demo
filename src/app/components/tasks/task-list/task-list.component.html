@@ -133,7 +133,7 @@
         <select
           class="status-quick-select"
           [value]="task.status"
-          (change)="onQuickStatusChange(task, $any($event.target).value)"
+          (change)="onQuickStatusChange(task, $event.target.value)"
         >
           <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
         </select>
