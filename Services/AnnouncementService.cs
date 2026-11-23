@@ -29,7 +29,7 @@ public class AnnouncementService : IAnnouncementService
 
     public Announcement? GetById(Guid id)
     {
-        return GetById(id);
+        return _announcements.TryGetValue(id, out var item) ? Clone(item) : null;
     }
 
     public Announcement Create(CreateAnnouncementDto dto)
@@ -52,7 +52,6 @@ public class AnnouncementService : IAnnouncementService
     public bool Delete(Guid id)
     {
         return _announcements.TryRemove(id, out _);
-    }
     }
 
     public int GetActiveCount()
