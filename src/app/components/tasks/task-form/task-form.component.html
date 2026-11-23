@@ -1,0 +1,97 @@
+<div class="modal-backdrop" (click)="onCancel()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">{{ isEditMode ? 'Edit Task' : 'Create New Task' }}</h3>
+      <button type="button" class="close-btn" (click)="onCancel()" aria-label="Close">&times;</button>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="task-form">
+      <div *ngIf="errorMessage" class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group">
+        <label for="taskTitle" class="form-label">
+          Title <span class="required">*</span>
+        </label>
+        <input
+          id="taskTitle"
+          type="text"
+          class="form-control"
+          placeholder="e.g., Implement OAuth2 integration"
+          [(ngModel)]="title"
+          name="title"
+          required
+          maxlength="120"
+        />
+        <div class="field-hint">{{ title.length }} / 120 characters</div>
+      </div>
+
+      <div class="form-group">
+        <label for="taskDescription" class="form-label">Description</label>
+        <textarea
+          id="taskDescription"
+          class="form-control"
+          rows="4"
+          placeholder="Provide detailed description or acceptance criteria..."
+          [(ngModel)]="description"
+          name="description"
+          maxlength="1000"
+        ></textarea>
+        <div class="field-hint">{{ description.length }} / 1000 characters</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group form-col">
+          <label for="taskStatus" class="form-label">Status</label>
+          <select id="taskStatus" class="form-control" [(ngModel)]="status" name="status">
+            <option *ngFor="let opt of statusOptions" [value]="opt">{{ opt }}</option>
+          </select>
+        </div>
+
+        <div class="form-group form-col">
+          <label for="taskPriority" class="form-label">Priority</label>
+          <select id="taskPriority" class="form-control" [(ngModel)]="priority" name="priority">
+            <option *ngFor="let opt of priorityOptions" [value]="opt">{{ opt }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group form-col">
+          <label for="taskAssignedTo" class="form-label">Assigned To</label>
+          <input
+            id="taskAssignedTo"
+            type="text"
+            class="form-control"
+            placeholder="e.g., alex.dev"
+            [(ngModel)]="assignedTo"
+            name="assignedTo"
+            maxlength="80"
+          />
+        </div>
+
+        <div class="form-group form-col">
+          <label for="taskDueDate" class="form-label">Due Date</label>
+          <input
+            id="taskDueDate"
+            type="date"
+            class="form-control"
+            [(ngModel)]="dueDate"
+            name="dueDate"
+          />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="isSubmitting">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner"></span>
+          {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update Task' : 'Create Task') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
