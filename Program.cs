@@ -1,4 +1,5 @@
 using DummyLoginApi.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ builder.Services.AddControllers();
 
 // Register application services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>
