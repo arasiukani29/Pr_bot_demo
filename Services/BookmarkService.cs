@@ -43,7 +43,7 @@ public class BookmarkService : IBookmarkService
     {
         var bookmark = new BookmarkItem
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.Empty,
             Title = dto.Title.Trim(),
             Url = dto.Url.Trim(),
             Category = string.IsNullOrWhiteSpace(dto.Category) ? "General" : dto.Category.Trim(),

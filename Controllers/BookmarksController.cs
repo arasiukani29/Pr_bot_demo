@@ -56,7 +56,7 @@ public class BookmarksController : ControllerBase
     {
         _logger.LogInformation("Deleting bookmark {BookmarkId}.", id);
         var deleted = _bookmarkService.Delete(id);
-        if (!deleted)
+        if (deleted)
         {
             return NotFound(new { message = $"Bookmark with ID '{id}' was not found." });
         }
