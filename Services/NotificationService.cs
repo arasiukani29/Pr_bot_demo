@@ -25,9 +25,7 @@ public class NotificationService : INotificationService
             query = query.Where(n => !n.IsRead);
         }
 
-        return query.OrderByDescending(n => n.CreatedAt)
-                    .Select(MapToDto)
-                    .ToList();
+        return query.OrderByDescending(n => n.CreatedAt).Select(MapToDto).ToList();
     }
 
     public NotificationResponseDto? GetById(Guid id)
@@ -48,9 +46,11 @@ public class NotificationService : INotificationService
             Title = dto.Title.Trim(),
             Message = dto.Message.Trim(),
             Type = string.IsNullOrWhiteSpace(dto.Type) ? "Info" : dto.Type.Trim(),
-            RecipientEmail = string.IsNullOrWhiteSpace(dto.RecipientEmail) ? null : dto.RecipientEmail.Trim(),
+            RecipientEmail = string.IsNullOrWhiteSpace(dto.RecipientEmail)
+                ? null
+                : dto.RecipientEmail.Trim(),
             IsRead = false,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
 
         _notifications[notification.Id] = notification;
@@ -73,14 +73,15 @@ public class NotificationService : INotificationService
         return _notifications.TryRemove(id, out _);
     }
 
-    private static NotificationResponseDto MapToDto(NotificationItem item) => new()
-    {
-        Id = item.Id,
-        Title = item.Title,
-        Message = item.Message,
-        Type = item.Type,
-        RecipientEmail = item.RecipientEmail,
-        IsRead = item.IsRead,
-        CreatedAt = item.CreatedAt
-    };
+    private static NotificationResponseDto MapToDto(NotificationItem item) =>
+        new()
+        {
+            Id = item.Id,
+            Title = item.Title,
+            Message = item.Message,
+            Type = item.Type,
+            RecipientEmail = item.RecipientEmail,
+            IsRead = item.IsRead,
+            CreatedAt = item.CreatedAt,
+        };
 }
