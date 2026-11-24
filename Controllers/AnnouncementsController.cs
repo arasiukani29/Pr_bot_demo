@@ -19,6 +19,7 @@ public class AnnouncementsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public IActionResult GetAll([FromQuery] bool? pinnedOnly)
     {
         _logger.LogInformation("Retrieving announcements (pinnedOnly: {PinnedOnly}).", pinnedOnly);
@@ -27,6 +28,7 @@ public class AnnouncementsController : ControllerBase
     }
 
     [HttpGet("active-count")]
+    [Authorize]
     public IActionResult GetActiveCount()
     {
         var count = _announcementService.GetActiveCount();
@@ -34,6 +36,7 @@ public class AnnouncementsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize]
     public IActionResult GetById(Guid id)
     {
         _logger.LogInformation("Retrieving announcement with ID '{AnnouncementId}'.", id);
