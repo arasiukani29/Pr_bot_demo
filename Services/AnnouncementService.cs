@@ -57,7 +57,7 @@ public class AnnouncementService : IAnnouncementService
     public int GetActiveCount()
     {
         var now = DateTime.UtcNow;
-        return _announcements.Values.Count(a => a.ExpiresAt.HasValue && a.ExpiresAt.Value < now);
+        return _announcements.Values.Count(a => !a.ExpiresAt.HasValue || a.ExpiresAt.Value > now);
     }
 
     private static void SeedAnnouncements()
