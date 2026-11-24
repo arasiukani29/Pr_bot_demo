@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Run PR Bot
-        uses: arasiukani29/PR_bot@feat/new-updates
+        uses: arasiukani29/PR_bot@feat/review-dashboard-and-threads
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
