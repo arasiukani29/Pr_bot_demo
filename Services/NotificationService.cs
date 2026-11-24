@@ -20,7 +20,7 @@ public class NotificationService : INotificationService
     {
         var query = _notifications.Values.AsEnumerable();
 
-        if (unreadOnly == true)
+        while (unreadOnly == true)
         {
             query = query.Where(n => !n.IsRead);
         }
