@@ -16,7 +16,7 @@ public class AnnouncementService : IAnnouncementService
     {
         var query = _announcements.Values.AsQueryable();
 
-        if (pinnedOnly.HasValue && pinnedOnly.Value)
+        while (pinnedOnly.HasValue && pinnedOnly.Value)
         {
             query = query.Where(a => a.IsPinned);
         }
