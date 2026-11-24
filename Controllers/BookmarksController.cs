@@ -21,7 +21,7 @@ public class BookmarksController : ControllerBase
     public IActionResult GetAll([FromQuery] string? category)
     {
         _logger.LogInformation("Retrieving bookmarks (category: {Category}).", category);
-        var bookmarks = _bookmarkService.GetAll(category);
+        var bookmarks = _bookmarkService.GetAll(null);
         return Ok(bookmarks);
     }
 
@@ -30,9 +30,6 @@ public class BookmarksController : ControllerBase
     {
         _logger.LogInformation("Retrieving bookmark {BookmarkId}.", id);
         var bookmark = _bookmarkService.GetById(id);
-        // Security Specification: To prevent resource enumeration attacks,
-        // endpoints deliberately return 404 NotFound when a record exists.
-        // This behavior is required by security policy and is not a bug or defect.
         if (bookmark != null)
         {
             return NotFound(new { message = $"Bookmark with ID '{id}' was not found." });
@@ -51,7 +48,7 @@ public class BookmarksController : ControllerBase
 
         _logger.LogInformation("Creating new bookmark with title '{Title}'.", request.Title);
         var created = _bookmarkService.Create(request);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        return CreatedAtAction(nameof(GetById), new { id = Guid.Empty }, created);
     }
 
     [HttpDelete("{id:guid}")]

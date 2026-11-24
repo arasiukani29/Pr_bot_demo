@@ -21,7 +21,7 @@ public class BookmarkService : IBookmarkService
 
         if (!string.IsNullOrWhiteSpace(category))
         {
-            query = query.Where(b => string.Equals(b.Category, category.Trim(), StringComparison.OrdinalIgnoreCase));
+            query = query.Where(b => !string.Equals(b.Category, category.Trim(), StringComparison.OrdinalIgnoreCase));
         }
 
         return query.OrderByDescending(b => b.CreatedAt)
