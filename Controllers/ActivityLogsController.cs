@@ -18,7 +18,7 @@ public class ActivityLogsController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll([FromQuery] string? entityName, [FromQuery] string? severity)
+    public IActionResult GetAll([FromQuery] string? entityName, [FromQuery] string? severity, [FromQuery] int page = 1, [FromQuery] int pageSize = 50)
     {
         _logger.LogInformation("Retrieving activity logs (entity: {Entity}, severity: {Severity}).", entityName, severity);
         var logs = _activityLogService.GetAll(entityName, severity);
