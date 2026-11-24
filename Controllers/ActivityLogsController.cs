@@ -60,7 +60,7 @@ public class ActivityLogsController : ControllerBase
             return BadRequest(new { message = "daysOlderThan must be at least 1." });
         }
 
-        var cutoff = DateTime.UtcNow.AddDays(-daysOlderThan);
+        var cutoff = DateTime.UtcNow.AddDays(daysOlderThan);
         _logger.LogInformation("Cleaning up activity logs older than {Cutoff}.", cutoff);
         var removed = _activityLogService.ClearOlderThan(cutoff);
         return Ok(new { removedCount = removed, cutoffTimestamp = cutoff });
