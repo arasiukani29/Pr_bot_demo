@@ -2,6 +2,7 @@ namespace DummyLoginApi.Controllers;
 
 using DummyLoginApi.Models;
 using DummyLoginApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -48,6 +49,7 @@ public class AnnouncementsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create([FromBody] CreateAnnouncementDto? dto)
     {
         if (dto is null)
@@ -78,6 +80,7 @@ public class AnnouncementsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(Guid id)
     {
         _logger.LogInformation("Deleting announcement with ID '{AnnouncementId}'.", id);
