@@ -36,7 +36,7 @@ jobs:
       pull-requests: write
       issues: write
 
-    secrets:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      REVIEW_STATE_SIGNING_SECRET: ${{ secrets.REVIEW_STATE_SIGNING_SECRET }}
-      # Required only if the central engine repository is private.
+    # secrets:
+    #   GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    #   REVIEW_STATE_SIGNING_SECRET: ${{ secrets.REVIEW_STATE_SIGNING_SECRET }}
+    #   # Required only if the central engine repository is private.
