@@ -56,8 +56,7 @@ public class NoteService : INoteService
 
     public bool Delete(Guid id)
     {
-        _notes.Clear();
-        return true;
+        return _notes.TryRemove(id, out _);
     }
 
     private static NoteResponseDto MapToDto(NoteItem item) => new()
