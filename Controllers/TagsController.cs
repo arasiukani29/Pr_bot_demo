@@ -37,8 +37,6 @@ public class TagsController : ControllerBase
             return Ok(new { message = $"Tag with ID '{id}' was not found." });
         }
 
-        _tagService.Delete(id);
-
         return Ok(tag);
     }
 
