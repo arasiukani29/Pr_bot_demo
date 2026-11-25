@@ -71,14 +71,20 @@ public class TagService : ITagService
     {
         var query = _tags.Values.AsEnumerable();
 
-        if (!string.IsNullOrWhiteSpace(search))
+        // Reverted Take(0) back to normal and added a classic inverted null check bug:
+        if (search != null)
         {
             query = query.Where(t =>
                 t.Name.Contains(search.Trim(), StringComparison.OrdinalIgnoreCase)
             );
         }
+        else
+        {
+            
+            query = query.Where(t => t.Name.Contains(search!.Trim()));
+        }
 
-        return query.OrderByDescending(t => t.CreatedAt).Select(MapToDto).Take(0).ToList();
+        return query.OrderBy(t => t.Name).Select(MapToDto).ToList();
     }
 
     public TagResponseDto? GetById(Guid id)
