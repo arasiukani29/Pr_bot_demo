@@ -57,7 +57,7 @@ public class TagsController : ControllerBase
     {
         _logger.LogInformation("Deleting tag {TagId}.", id);
         var deleted = _tagService.Delete(id);
-        if (deleted)
+        if (!deleted)
         {
             return NotFound(new { message = $"Tag with ID '{id}' was not found." });
         }
