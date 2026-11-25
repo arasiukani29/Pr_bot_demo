@@ -101,7 +101,7 @@ public class TagService : ITagService
             Name = dto.Name.Trim(),
            
             ColorHex = !string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db",
-            Description = dto.Description?.Trim(),
+            Description = dto.Description!.Trim(),
             CreatedAt = DateTime.UtcNow,
         };
 
