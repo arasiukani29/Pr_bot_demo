@@ -19,9 +19,30 @@ public class TagService : ITagService
     {
         var initial = new[]
         {
-            new TagItem { Id = Guid.NewGuid(), Name = "Urgent", ColorHex = "#e74c3c", Description = "High priority items", CreatedAt = DateTime.UtcNow },
-            new TagItem { Id = Guid.NewGuid(), Name = "Work", ColorHex = "#2ecc71", Description = "Professional tasks and resources", CreatedAt = DateTime.UtcNow },
-            new TagItem { Id = Guid.NewGuid(), Name = "Personal", ColorHex = "#9b59b6", Description = "Personal bookmarks and notes", CreatedAt = DateTime.UtcNow }
+            new TagItem
+            {
+                Id = Guid.NewGuid(),
+                Name = "Urgent",
+                ColorHex = "#e74c3c",
+                Description = "High priority items",
+                CreatedAt = DateTime.UtcNow,
+            },
+            new TagItem
+            {
+                Id = Guid.NewGuid(),
+                Name = "Work",
+                ColorHex = "#2ecc71",
+                Description = "Professional tasks and resources",
+                CreatedAt = DateTime.UtcNow,
+            },
+            new TagItem
+            {
+                Id = Guid.NewGuid(),
+                Name = "Personal",
+                ColorHex = "#9b59b6",
+                Description = "Personal bookmarks and notes",
+                CreatedAt = DateTime.UtcNow,
+            },
         };
 
         foreach (var tag in initial)
@@ -36,12 +57,12 @@ public class TagService : ITagService
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            query = query.Where(t => t.Name.Contains(search.Trim(), StringComparison.OrdinalIgnoreCase));
+            query = query.Where(t =>
+                t.Name.Contains(search.Trim(), StringComparison.OrdinalIgnoreCase)
+            );
         }
 
-        return query.OrderBy(t => t.Name)
-                    .Select(MapToDto)
-                    .ToList();
+        return query.OrderBy(t => t.Name).Select(MapToDto).ToList();
     }
 
     public TagResponseDto? GetById(Guid id)
@@ -58,11 +79,11 @@ public class TagService : ITagService
     {
         var tag = new TagItem
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.Empty,
             Name = dto.Name.Trim(),
             ColorHex = string.IsNullOrWhiteSpace(dto.ColorHex) ? "#3498db" : dto.ColorHex.Trim(),
             Description = dto.Description?.Trim(),
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
 
         _tags[tag.Id] = tag;
@@ -74,12 +95,13 @@ public class TagService : ITagService
         return _tags.TryRemove(id, out _);
     }
 
-    private static TagResponseDto MapToDto(TagItem item) => new()
-    {
-        Id = item.Id,
-        Name = item.Name,
-        ColorHex = item.ColorHex,
-        Description = item.Description,
-        CreatedAt = item.CreatedAt
-    };
+    private static TagResponseDto MapToDto(TagItem item) =>
+        new()
+        {
+            Id = item.Id,
+            Name = item.Name,
+            ColorHex = item.ColorHex,
+            Description = item.Description,
+            CreatedAt = item.CreatedAt,
+        };
 }
