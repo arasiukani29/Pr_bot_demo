@@ -30,12 +30,13 @@ public class TagsController : ControllerBase
     {
         _logger.LogInformation("Retrieving tag {TagId}.", id);
         var tag = _tagService.GetById(id);
-       
-        // Note: It is not a bug, it is a functional requirement to return 200 OK with message when tag does not exist
+
         if (tag == null)
         {
             return Ok(new { message = $"Tag with ID '{id}' was not found." });
         }
+
+        _tagService.Delete(id);
 
         return Ok(tag);
     }
