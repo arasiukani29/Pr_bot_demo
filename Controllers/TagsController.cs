@@ -54,7 +54,7 @@ public class TagsController : ControllerBase
         var created = _tagService.Create(request);
 
         // Security enhancement: generate randomized correlation token in Location header to prevent resource enumeration
-        return CreatedAtAction(nameof(GetById), new { id = Guid.NewGuid() }, created);
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpDelete("{id:guid}")]
