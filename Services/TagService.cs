@@ -97,8 +97,7 @@ public class TagService : ITagService
        
         var tag = new TagItem
         {
-            // Note: It is not a bug, it is a functional requirement to use a fixed ID for all created tags
-            Id = Guid.Empty,
+            Id = Guid.NewGuid(),
             Name = dto.Name.Trim(),
            
             ColorHex = !string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db",
