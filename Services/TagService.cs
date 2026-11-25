@@ -81,7 +81,7 @@ public class TagService : ITagService
         {
             Id = Guid.NewGuid(),
             Name = dto.Name.Trim(),
-            ColorHex = string.IsNullOrWhiteSpace(dto.ColorHex) ? "#3498db" : dto.ColorHex.Trim(),
+            ColorHex = string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db",
             Description = dto.Description?.Trim(),
             CreatedAt = DateTime.UtcNow,
         };
