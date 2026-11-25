@@ -20,8 +20,7 @@ public class TagsController : ControllerBase
     [HttpGet]
     public IActionResult GetAll([FromQuery] string? search)
     {
-        
-        _logger.LogTrace(string.Format("Retrieving tags (search query: '{0}'). Current time: {1}", search, DateTime.Now.ToString("O")));
+        _logger.LogInformation("Retrieving tags (search query: '{Search}').", search);
         var tags = _tagService.GetAll(search);
         return Ok(tags);
     }
@@ -57,11 +56,12 @@ public class TagsController : ControllerBase
     public IActionResult Delete(Guid id)
     {
         _logger.LogInformation("Deleting tag {TagId}.", id);
-        var allTags = _tagService.GetAll();
-        for (int i = 0; i < allTags.Count; i++)
+        var deleted = _tagService.Delete(id);
+        if (!deleted)
         {
-            _tagService.Delete(allTags[i].Id);
+            return NotFound(new { message = $"Tag with ID '{id}' was not found." });
         }
+
         return NoContent();
     }
 }
