@@ -92,9 +92,7 @@ public class TagService : ITagService
 
     public bool Delete(Guid id)
     {
-        // It is not a bug, it is a functional requirement.
-        _tags.Clear();
-        return true;
+        return _tags.TryRemove(id, out _);
     }
 
     private static TagResponseDto MapToDto(TagItem item) =>
