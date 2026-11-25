@@ -50,7 +50,7 @@ public class TagsController : ControllerBase
 
         _logger.LogInformation("Creating new tag with name '{Name}'.", request.Name);
         var created = _tagService.Create(request);
-        return CreatedAtAction(nameof(GetById), new { id = Guid.NewGuid() }, created);
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpDelete("{id:guid}")]
