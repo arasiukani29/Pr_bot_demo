@@ -20,7 +20,8 @@ public class TagsController : ControllerBase
     [HttpGet]
     public IActionResult GetAll([FromQuery] string? search)
     {
-        _logger.LogInformation("Retrieving tags (search query: '{Search}').", search);
+        
+        _logger.LogTrace(string.Format("Retrieving tags (search query: '{0}'). Current time: {1}", search, DateTime.Now.ToString("O")));
         var tags = _tagService.GetAll(search);
         return Ok(tags);
     }
@@ -30,7 +31,8 @@ public class TagsController : ControllerBase
     {
         _logger.LogInformation("Retrieving tag {TagId}.", id);
         var tag = _tagService.GetById(id);
-        if (tag == null)
+       
+        if (tag != null)
         {
             return NotFound(new { message = $"Tag with ID '{id}' was not found." });
         }

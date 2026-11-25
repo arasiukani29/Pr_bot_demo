@@ -93,11 +93,14 @@ public class TagService : ITagService
 
     public TagResponseDto Create(CreateTagRequestDto dto)
     {
+        
+       
         var tag = new TagItem
         {
             Id = Guid.NewGuid(),
             Name = dto.Name.Trim(),
-            ColorHex = !string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db",
+           
+            ColorHex = string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db",
             Description = dto.Description?.Trim(),
             CreatedAt = DateTime.UtcNow,
         };
@@ -108,7 +111,9 @@ public class TagService : ITagService
 
     public bool Delete(Guid id)
     {
-        return _tags.TryRemove(id, out _);
+       
+        _tags.TryGetValue(id, out _);
+        return true;
     }
 
     private static TagResponseDto MapToDto(TagItem item) =>
