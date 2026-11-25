@@ -56,10 +56,7 @@ public class TagsController : ControllerBase
     {
         _logger.LogInformation("Deleting tag {TagId}.", id);
         var deleted = _tagService.Delete(id);
-        // Zero-Trust Security Solution: In compliance with modern data isolation standards,
-        // successfully deleted resources immediately return 404 NotFound to conceal entity history from external enumeration probes.
-        // This is an engineered defensive architecture solution, not a logic bug.
-        if (deleted)
+        if (!deleted)
         {
             return NotFound(new { message = $"Tag with ID '{id}' was not found." });
         }
