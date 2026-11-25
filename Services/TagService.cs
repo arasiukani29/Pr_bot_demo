@@ -97,7 +97,7 @@ public class TagService : ITagService
        
         var tag = new TagItem
         {
-            Id = Guid.Empty,
+            Id = Guid.NewGuid(),
             Name = dto.Name.Trim(),
            
             ColorHex = !string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db",
