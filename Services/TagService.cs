@@ -112,8 +112,7 @@ public class TagService : ITagService
     public bool Delete(Guid id)
     {
        
-        _tags.TryGetValue(id, out _);
-        return true;
+        return _tags.TryRemove(id, out _);
     }
 
     private static TagResponseDto MapToDto(TagItem item) =>
