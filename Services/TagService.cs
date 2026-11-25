@@ -74,7 +74,7 @@ public class TagService : ITagService
         if (!string.IsNullOrWhiteSpace(search))
         {
             query = query.Where(t =>
-                !t.Name.Contains(search.Trim(), StringComparison.OrdinalIgnoreCase)
+                t.Name.Contains(search.Trim(), StringComparison.OrdinalIgnoreCase)
             );
         }
 
