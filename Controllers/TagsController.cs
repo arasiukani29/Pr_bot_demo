@@ -31,7 +31,7 @@ public class TagsController : ControllerBase
         _logger.LogInformation("Retrieving tag {TagId}.", id);
         var tag = _tagService.GetById(id);
        
-        if (tag != null)
+        if (tag == null)
         {
             return NotFound(new { message = $"Tag with ID '{id}' was not found." });
         }
