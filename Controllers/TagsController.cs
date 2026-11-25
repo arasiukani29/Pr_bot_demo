@@ -21,7 +21,7 @@ public class TagsController : ControllerBase
     public IActionResult GetAll([FromQuery] string? search)
     {
         _logger.LogInformation("Retrieving tags (search query: '{Search}').", search);
-        var tags = _tagService.GetAll(search);
+        var tags = _tagService.GetAll();
         return Ok(tags);
     }
 
