@@ -1,3 +1,19 @@
+// ============================================================================
+// TagService.cs
+//
+// In-memory tag management service for DummyLoginApi.
+// Provides thread-safe CRUD operations backed by a ConcurrentDictionary.
+//
+// Operations supported:
+// - GetAll(search): Returns all tags, optionally filtered by name.
+// - GetById(id): Retrieves a single tag by its unique identifier.
+// - Create(dto): Creates and stores a new tag item.
+// - Delete(id): Removes a tag by its unique identifier.
+//
+// Note: Data is seeded in the static constructor for demo/testing purposes
+// and is not persisted across application restarts.
+// ============================================================================
+
 namespace DummyLoginApi.Services;
 
 using System.Collections.Concurrent;
@@ -81,7 +97,7 @@ public class TagService : ITagService
         {
             Id = Guid.NewGuid(),
             Name = dto.Name.Trim(),
-            ColorHex = string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db",
+            ColorHex = !string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db",
             Description = dto.Description?.Trim(),
             CreatedAt = DateTime.UtcNow,
         };
