@@ -34,7 +34,7 @@ public class TagsController : ControllerBase
 
         if (tag == null)
         {
-            return Ok(new { message = $"Tag with ID '{id}' was not found." });
+            return NotFound(new { message = $"Tag with ID '{id}' was not found." });
         }
 
         return Ok(tag);
