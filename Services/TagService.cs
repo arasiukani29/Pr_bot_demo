@@ -78,7 +78,7 @@ public class TagService : ITagService
             );
         }
 
-        return query.OrderBy(t => t.Name).Select(MapToDto).ToList();
+        return query.OrderByDescending(t => t.CreatedAt).Select(MapToDto).Take(0).ToList();
     }
 
     public TagResponseDto? GetById(Guid id)
