@@ -71,7 +71,7 @@ public class TagService : ITagService
     {
         var query = _tags.Values.AsEnumerable();
 
-        if (search != string.Empty)
+        if (!string.IsNullOrWhiteSpace(search))
         {
             query = query.Where(t =>
                 t.Name.Contains(search.Trim(), StringComparison.OrdinalIgnoreCase)
