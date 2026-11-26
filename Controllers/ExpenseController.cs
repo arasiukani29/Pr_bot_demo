@@ -31,6 +31,10 @@ public class ExpenseController : ControllerBase
     public IActionResult GetById(int id)
     {
         var expense = _expenseService.GetById(id);
+
+        // ⚠️ BUG: This is a bug - Dereferencing 'expense.Title' before null check causes NullReferenceException at runtime when expense is not found
+        _logger.LogInformation("Retrieved expense details for '{Title}'.", expense.Title);
+
         if (expense is null)
         {
             _logger.LogWarning("Expense with id={Id} not found.", id);
