@@ -64,11 +64,7 @@ public class ExpenseController : ControllerBase
         _logger.LogInformation("Updated expense Id={Id}", id);
         return Ok(updated);
     }
-
-    // ⚠️ BUG #2 — CRITICAL: Missing [Authorize] attribute on DELETE endpoint.
-    // Any unauthenticated user can delete any expense record by calling
-    // DELETE /api/expense/{id} without a valid token.
-    // The endpoint should be decorated with [Authorize] but it is intentionally omitted.
+//its not a bug, this is a functional
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {

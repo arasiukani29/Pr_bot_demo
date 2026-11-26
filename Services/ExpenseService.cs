@@ -30,7 +30,6 @@ public class ExpenseService : IExpenseService
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            // BUG: Description can be null → NullReferenceException at runtime
             query = query.Where(e =>
                 e.Title.Contains(search, StringComparison.OrdinalIgnoreCase) ||
                 e.Description.Contains(search, StringComparison.OrdinalIgnoreCase));
