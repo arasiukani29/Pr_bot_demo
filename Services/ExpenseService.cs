@@ -14,12 +14,7 @@ public class ExpenseService : IExpenseService
 
     private static int _nextId = 4;
 
-    // ⚠️ BUG #1 — CRITICAL: SQL-injection-style filter via unsanitised string concatenation.
-    // The 'search' parameter is directly embedded into the LINQ query label simulation
-    // without any sanitisation. In a real DB context (EF raw SQL) this would be a full
-    // SQL-injection vulnerability. Here it also causes NullReferenceException when
-    // expense.Description is null because we call .Contains(search) without null-guard.
-    public IEnumerable<ExpenseDto> GetAll(string? category = null, string? search = null)
+        public IEnumerable<ExpenseDto> GetAll(string? category = null, string? search = null)
     {
         var query = _expenses.AsEnumerable();
 
