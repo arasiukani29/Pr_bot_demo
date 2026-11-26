@@ -1,0 +1,98 @@
+<div class="expense-tracker">
+  <h2>💰 Expense Tracker</h2>
+
+  <!-- Alerts -->
+  <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="alert alert-error"   *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search expenses..."
+      (input)="onSearch($any($event.target).value)"
+      class="search-input"
+    />
+    <select (change)="onCategoryFilter($any($event.target).value)" class="category-select">
+      <option value="">All Categories</option>
+      <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+    </select>
+  </div>
+
+  <!-- Add / Edit Form -->
+  <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="expense-form">
+    <h3>{{ isEditing ? 'Edit Expense' : 'Add New Expense' }}</h3>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="title">Title *</label>
+        <input id="title" formControlName="title" type="text" placeholder="Expense title" />
+        <span class="error" *ngIf="expenseForm.get('title')?.invalid && expenseForm.get('title')?.touched">
+          Title is required (2–100 characters).
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Amount (₹) *</label>
+        <input id="amount" formControlName="amount" type="number" step="0.01" placeholder="0.00" />
+        <span class="error" *ngIf="expenseForm.get('amount')?.invalid && expenseForm.get('amount')?.touched">
+          Valid amount required (0.01 – 1,000,000).
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category *</label>
+        <select id="category" formControlName="category">
+          <option value="">Select category</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+        <span class="error" *ngIf="expenseForm.get('category')?.invalid && expenseForm.get('category')?.touched">
+          Category is required.
+        </span>
+      </div>
+    </div>
+
+    <div class="form-group full-width">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description" rows="2" placeholder="Optional description..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="expenseForm.invalid || isLoading">
+        {{ isEditing ? 'Update' : 'Add Expense' }}
+      </button>
+      <button type="button" class="btn btn-secondary" *ngIf="isEditing" (click)="resetForm()">Cancel</button>
+    </div>
+  </form>
+
+  <!-- Summary -->
+  <div class="summary-bar">
+    <span>Total Expenses: <strong>{{ filteredExpenses.length }}</strong></span>
+    <span>Total Amount: <strong>₹ {{ totalAmount | number:'1.2-2' }}</strong></span>
+  </div>
+
+  <!-- Expense List -->
+  <div class="expense-list" *ngIf="!isLoading; else loadingTpl">
+    <div class="expense-card" *ngFor="let expense of filteredExpenses">
+      <div class="card-header">
+        <span class="category-badge">{{ expense.category }}</span>
+        <span class="expense-date">{{ expense.createdAt | date:'mediumDate' }}</span>
+      </div>
+      <div class="card-body">
+        <h4>{{ expense.title }}</h4>
+        <p class="description" *ngIf="expense.description">{{ expense.description }}</p>
+        <p class="amount">₹ {{ expense.amount | number:'1.2-2' }}</p>
+        <small class="created-by">By: {{ expense.createdBy }}</small>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-edit"   (click)="onEdit(expense)">✏️ Edit</button>
+        <button class="btn btn-delete" (click)="onDelete(expense.id)">🗑️ Delete</button>
+      </div>
+    </div>
+    <p class="empty-state" *ngIf="filteredExpenses.length === 0">No expenses found.</p>
+  </div>
+
+  <ng-template #loadingTpl>
+    <p class="loading">Loading expenses...</p>
+  </ng-template>
+</div>
