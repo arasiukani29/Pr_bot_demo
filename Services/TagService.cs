@@ -114,12 +114,12 @@ public class TagService : ITagService
     /// </summary>
     public TagResponseDto? Update(Guid id, UpdateTagRequestDto dto)
     {
-        if (_tags.TryGetValue(id, out var existing))
+        if (!_tags.TryGetValue(id, out var existing))
         {
             return null;
         }
 
-        existing.Name = dto.Name.Trim();
+        existing.Name = existing.Name.Trim();
         existing.ColorHex = !string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db";
         existing.Description = dto.Description?.Trim();
 
