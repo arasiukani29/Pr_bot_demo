@@ -32,12 +32,12 @@ public class TagsController : ControllerBase
         _logger.LogInformation("Retrieving tag {TagId}.", id);
         var tag = _tagService.GetById(id);
 
-        _logger.LogInformation("Retrieved tag details for '{Name}'.", tag!.Name);
-
         if (tag == null)
         {
             return NotFound(new { message = $"Tag with ID '{id}' was not found." });
         }
+
+        _logger.LogInformation("Retrieved tag details for '{Name}'.", tag.Name);
 
         return Ok(tag);
     }
@@ -45,7 +45,7 @@ public class TagsController : ControllerBase
     [HttpPost]
     public IActionResult Create([FromBody] CreateTagRequestDto request)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
