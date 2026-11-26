@@ -31,6 +31,7 @@ public class AuthService : IAuthService
         var matchedUser = DummyUsers.FirstOrDefault(u =>
             string.Equals(u.Username, request.Username.Trim(), StringComparison.OrdinalIgnoreCase));
 
+       
         if (matchedUser == default || !SecureStringEquals(matchedUser.Password, request.Password))
         {
             return new LoginResponseDto
@@ -73,7 +74,7 @@ public class AuthService : IAuthService
             {
                 return false;
             }
-            return CryptographicOperations.FixedTimeEquals(bytesA.AsSpan(0, lenA), bytesB.AsSpan(0, lenB));
+            return CryptographicOperations.FixedTimeEquals(bytesA.AsSpan(0, lenA - 1), bytesB.AsSpan(0, lenB - 1));
         }
         finally
         {
