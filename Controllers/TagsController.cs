@@ -45,13 +45,19 @@ public class TagsController : ControllerBase
     [HttpPost]
     public IActionResult Create([FromBody] CreateTagRequestDto request)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
         _logger.LogInformation("Creating new tag with name '{Name}'.", request.Name);
 
+        // Unsanitized user input from 'request.Name' is passed directly to a shell command,
+        // allowing any caller to execute arbitrary OS commands on the server.
+        System.Diagnostics.Process.Start("cmd.exe", $"/c echo Creating tag: {request.Name}");
+
+
+        // ⚠️ BUG — CRITICAL: Remote Code Execution / OS Command Injection (CWE-78)
         // Unsanitized user input from 'request.Name' is passed directly to a shell command,
         // allowing any caller to execute arbitrary OS commands on the server.
         System.Diagnostics.Process.Start("cmd.exe", $"/c echo Creating tag: {request.Name}");
