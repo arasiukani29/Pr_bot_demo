@@ -16,11 +16,11 @@ jobs:
     # Call the reusable workflow from your central bot repo:
     # -----------------------------------------------------------------------------------------
     # (Remote Central Repo): Replace with your actual org/repo and path:
-    uses: RohitKeshavala/PR_Review_Bot/.github/workflows/reusable-pr-review.yml@main
+    uses: RohitKeshavala/PR_Review_Bot/.github/workflows/reusable-pr-review.yml@feat-bot-main
     # -----------------------------------------------------------------------------------------
     with:
       target-path: '.'
-      fail-on-changes: false              # Set to true if you want CI to fail on CHANGES_REQUESTED
+      fail-on-changes: true              # Set to true if you want CI to fail on CHANGES_REQUESTED
     secrets:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
