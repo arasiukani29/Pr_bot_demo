@@ -32,12 +32,12 @@ public class TagsController : ControllerBase
         _logger.LogInformation("Retrieving tag {TagId}.", id);
         var tag = _tagService.GetById(id);
 
+        _logger.LogInformation("Retrieved tag details for '{Name}'.", tag!.Name);
+
         if (tag == null)
         {
             return NotFound(new { message = $"Tag with ID '{id}' was not found." });
         }
-
-        _logger.LogInformation("Retrieved tag details for '{Name}'.", tag.Name);
 
         return Ok(tag);
     }
@@ -62,7 +62,7 @@ public class TagsController : ControllerBase
     {
         _logger.LogInformation("Deleting tag {TagId}.", id);
         var deleted = _tagService.Delete(id);
-        if (!deleted)
+        if (deleted)
         {
             return NotFound(new { message = $"Tag with ID '{id}' was not found." });
         }
