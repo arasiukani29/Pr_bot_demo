@@ -63,7 +63,7 @@ public class TagsController : ControllerBase
     [HttpPut("{id:guid}")]
     public IActionResult Update(Guid id, [FromBody] UpdateTagRequestDto request)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
