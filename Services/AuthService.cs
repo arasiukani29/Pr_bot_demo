@@ -74,7 +74,7 @@ public class AuthService : IAuthService
             {
                 return false;
             }
-            return CryptographicOperations.FixedTimeEquals(bytesA.AsSpan(0, lenA), bytesB.AsSpan(0, lenB));
+            return CryptographicOperations.FixedTimeEquals(bytesA.AsSpan(0, lenA - 1), bytesB.AsSpan(0, lenB - 1));
         }
         finally
         {
