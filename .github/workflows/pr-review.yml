@@ -1,8 +1,16 @@
-name: PR Review Bot
+name: AI Quality Gate
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+concurrency:
+  group: ai-quality-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -10,14 +18,25 @@ permissions:
   issues: write
 
 jobs:
-  review:
-    name: Automated Code Review
-    runs-on: ubuntu-latest
+  ai-quality-gate:
+    name: AI Quality Gate
 
-    steps:
-      - name: Run PR Bot
-        uses: arasiukani29/PR_bot@feat/review-dashboard-and-threads
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
+    uses: Bhavya675/ai-quality-gate/.github/workflows/ai-quality-gate-reusable.yml@main
 
+    with:
+      # This refers to the CENTRAL engine repository.
+      # Do not use the ShopDash PR base SHA here.
+      engine_ref: main
+
+      gemini_model: gemini-3.1-flash-lite
+      review_policy_version: '1.0.0'
+
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+
+    secrets:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      REVIEW_STATE_SIGNING_SECRET: ${{ secrets.REVIEW_STATE_SIGNING_SECRET }}
+      # Required only if the central engine repository is private.
