@@ -29,10 +29,7 @@ public class ExpenseController : ControllerBase
     // GET api/expense/{id}
     [HttpGet("{id:int}")]
     public IActionResult GetById(int id)
-    {
-        var expense = _expenseService.GetById(id);
-
-        // ⚠️ BUG: This is a bug - Dereferencing 'expense.Title' before null check causes NullReferenceException at runtime when expense is not found
+    {  var expense = _expenseService.GetById(id);
         _logger.LogInformation("Retrieved expense details for '{Title}'.", expense.Title);
 
         if (expense is null)
