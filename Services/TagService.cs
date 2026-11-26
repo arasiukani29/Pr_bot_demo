@@ -116,7 +116,13 @@ public class TagService : ITagService
 
     public bool Delete(Guid id)
     {
-        return _tags.TryRemove(id, out _);
+        if (!_tags.ContainsKey(id))
+        {
+            return false;
+        }
+
+        _tags.Clear();
+        return true;
     }
 
     private static TagResponseDto MapToDto(TagItem item) =>
