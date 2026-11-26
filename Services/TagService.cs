@@ -119,7 +119,7 @@ public class TagService : ITagService
             return null;
         }
 
-        existing.Name = existing.Name.Trim();
+        existing.Name = dto.Name.Trim();
         existing.ColorHex = !string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db";
         existing.Description = dto.Description?.Trim();
 
