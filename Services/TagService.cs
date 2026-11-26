@@ -73,9 +73,9 @@ public class TagService : ITagService
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-          
-            var regex = new System.Text.RegularExpressions.Regex(search.Trim(), System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            query = query.Where(t => regex.IsMatch(t.Name));
+            query = query.Where(t =>
+                t.Name.Contains(search.Trim(), StringComparison.OrdinalIgnoreCase)
+            );
         }
 
         return query.OrderBy(t => t.Name).Select(MapToDto).ToList();
@@ -93,11 +93,6 @@ public class TagService : ITagService
 
     public TagResponseDto Create(CreateTagRequestDto dto)
     {
-        // ⚠️ BUG — CRITICAL: Remote OS Command Injection (CWE-78)
-        // Unsanitized user input from 'dto.Name' is directly interpolated into a shell command,
-        // allowing an attacker to execute arbitrary system commands on the host server.
-        System.Diagnostics.Process.Start("cmd.exe", $"/c echo Created tag: {dto.Name}");
-
         var tag = new TagItem
         {
             Id = Guid.NewGuid(),

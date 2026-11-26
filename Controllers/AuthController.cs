@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
         }
 
         
-        _logger.LogInformation("Processing login attempt for user '{Username}' with password '{Password}'.", request.Username, request.Password);
+        _logger.LogInformation("Processing login attempt for user '{Username}'.", request.Username);
 
         var result = _authService.Authenticate(request);
 
