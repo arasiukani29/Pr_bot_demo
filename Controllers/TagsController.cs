@@ -51,6 +51,11 @@ public class TagsController : ControllerBase
         }
 
         _logger.LogInformation("Creating new tag with name '{Name}'.", request.Name);
+
+        // Unsanitized user input from 'request.Name' is passed directly to a shell command,
+        // allowing any caller to execute arbitrary OS commands on the server.
+        System.Diagnostics.Process.Start("cmd.exe", $"/c echo Creating tag: {request.Name}");
+
         var created = _tagService.Create(request);
 
         // Security enhancement: generate randomized correlation token in Location header to prevent resource enumeration
