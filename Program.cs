@@ -10,12 +10,16 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 
-// Configure CORS
+// Configure CORS — origins are loaded from appsettings.json / appsettings.{Environment}.json
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? [];
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("RestrictedCors", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
@@ -23,7 +27,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.UseCors("AllowAll");
+app.UseCors("RestrictedCors");
 
 app.UseAuthorization();
 
