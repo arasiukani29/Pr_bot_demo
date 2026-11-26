@@ -17,6 +17,13 @@ public class CreateTagRequestDto
     public string? Description { get; init; }
 }
 
+/// <summary>
+/// Request payload for updating an existing tag.
+/// </summary>
+public class UpdateTagRequestDto : CreateTagRequestDto
+{
+}
+
 public class TagResponseDto
 {
     public Guid Id { get; init; }

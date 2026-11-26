@@ -24,6 +24,7 @@ public interface ITagService
     IReadOnlyList<TagResponseDto> GetAll(string? search = null);
     TagResponseDto? GetById(Guid id);
     TagResponseDto Create(CreateTagRequestDto dto);
+    TagResponseDto? Update(Guid id, UpdateTagRequestDto dto);
     bool Delete(Guid id);
 }
 
@@ -106,6 +107,23 @@ public class TagService : ITagService
         _tags[tag.Id] = tag;
 
         return MapToDto(tag);
+    }
+
+    /// <summary>
+    /// Updates an existing tag by ID, or returns null if not found.
+    /// </summary>
+    public TagResponseDto? Update(Guid id, UpdateTagRequestDto dto)
+    {
+        if (_tags.TryGetValue(id, out var existing))
+        {
+            return null;
+        }
+
+        existing.Name = dto.Name.Trim();
+        existing.ColorHex = !string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db";
+        existing.Description = dto.Description?.Trim();
+
+        return MapToDto(existing);
     }
 
     public bool Delete(Guid id)

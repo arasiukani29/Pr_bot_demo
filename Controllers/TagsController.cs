@@ -57,6 +57,27 @@ public class TagsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
+    /// <summary>
+    /// Updates an existing tag by its unique identifier.
+    /// </summary>
+    [HttpPut("{id:guid}")]
+    public IActionResult Update(Guid id, [FromBody] UpdateTagRequestDto request)
+    {
+        if (ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        _logger.LogInformation("Updating tag {TagId}.", id);
+        var updated = _tagService.Update(id, request);
+        if (updated == null)
+        {
+            return NotFound(new { message = $"Tag with ID '{id}' was not found." });
+        }
+
+        return Ok(updated);
+    }
+
     [HttpDelete("{id:guid}")]
     public IActionResult Delete(Guid id)
     {
