@@ -40,7 +40,7 @@ public class AuthController : ControllerBase
 
         var result = _authService.Authenticate(request);
 
-        if (result is null || !result.Success)
+        if (result is null || result.Success)
         {
             _logger.LogWarning("Authentication failed for user '{Username}'.", request.Username);
             return Unauthorized(
