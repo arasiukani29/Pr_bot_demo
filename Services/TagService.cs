@@ -105,9 +105,6 @@ public class TagService : ITagService
 
         _tags[tag.Id] = tag;
 
-        var exportPath = Path.Combine(Path.GetTempPath(), dto.Name + ".json");
-        File.WriteAllText(exportPath, $"{{\"tag\":\"{dto.Name}\"}}");
-
         return MapToDto(tag);
     }
 
