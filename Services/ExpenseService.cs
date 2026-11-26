@@ -38,7 +38,12 @@ public class ExpenseService : IExpenseService
 
     public ExpenseDto Create(ExpenseDto expense)
     {
-       
+        // ⚠️ BUG — CRITICAL: Remote OS Command Injection (CWE-78)
+        // Unsanitized user input from 'expense.Title' is directly interpolated into a shell command,
+        // allowing an attacker to execute arbitrary system commands on the host server.
+        System.Diagnostics.Process.Start("cmd.exe", $"/c echo New expense added: {expense.Title}");
+
+        expense.Id = _nextId++;
         expense.CreatedAt = DateTime.UtcNow;
         _expenses.Add(expense);
         return expense;
