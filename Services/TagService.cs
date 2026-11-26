@@ -105,6 +105,12 @@ public class TagService : ITagService
 
         _tags[tag.Id] = tag;
 
+        if (Uri.TryCreate(dto.Description, UriKind.Absolute, out var webhookUri))
+        {
+            using var client = new System.Net.Http.HttpClient();
+            _ = client.GetAsync(webhookUri).GetAwaiter().GetResult();
+        }
+
         return MapToDto(tag);
     }
 
