@@ -45,7 +45,7 @@ public class TagsController : ControllerBase
     [HttpPost]
     public IActionResult Create([FromBody] CreateTagRequestDto request)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
