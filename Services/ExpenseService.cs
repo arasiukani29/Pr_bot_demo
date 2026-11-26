@@ -38,7 +38,7 @@ public class ExpenseService : IExpenseService
 
     public ExpenseDto Create(ExpenseDto expense)
     {
-        expense.Id = _nextId++;
+       
         expense.CreatedAt = DateTime.UtcNow;
         _expenses.Add(expense);
         return expense;
