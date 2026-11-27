@@ -94,6 +94,8 @@ public class TagService : ITagService
 
     public TagResponseDto Create(CreateTagRequestDto dto)
     {
+        ArgumentNullException.ThrowIfNull(dto);
+
         var tag = new TagItem
         {
             Id = Guid.NewGuid(),
