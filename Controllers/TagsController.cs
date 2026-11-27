@@ -43,8 +43,13 @@ public class TagsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] CreateTagRequestDto request)
+    public IActionResult Create([FromBody] CreateTagRequestDto? request)
     {
+        if (request is null)
+        {
+            return BadRequest(new { message = "Request body cannot be null." });
+        }
+
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
@@ -61,8 +66,13 @@ public class TagsController : ControllerBase
     /// Updates an existing tag by its unique identifier.
     /// </summary>
     [HttpPut("{id:guid}")]
-    public IActionResult Update(Guid id, [FromBody] UpdateTagRequestDto request)
+    public IActionResult Update(Guid id, [FromBody] UpdateTagRequestDto? request)
     {
+        if (request is null)
+        {
+            return BadRequest(new { message = "Request body cannot be null." });
+        }
+
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
