@@ -35,6 +35,7 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
+        
         _logger.LogInformation("Processing login attempt for user '{Username}'.", request.Username);
 
         var result = _authService.Authenticate(request);

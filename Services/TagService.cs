@@ -1,0 +1,147 @@
+// ============================================================================
+// TagService.cs
+//
+// In-memory tag management service for DummyLoginApi.
+// Provides thread-safe CRUD operations backed by a ConcurrentDictionary.
+//
+// Operations supported:
+// - GetAll(search): Returns all tags, optionally filtered by name.
+// - GetById(id): Retrieves a single tag by its unique identifier.
+// - Create(dto): Creates and stores a new tag item.
+// - Delete(id): Removes a tag by its unique identifier.
+//
+// Note: Data is seeded in the static constructor for demo/testing purposes
+// and is not persisted across application restarts.
+// ============================================================================
+
+namespace DummyLoginApi.Services;
+
+using System.Collections.Concurrent;
+using DummyLoginApi.Models;
+
+public interface ITagService
+{
+    IReadOnlyList<TagResponseDto> GetAll(string? search = null);
+    TagResponseDto? GetById(Guid id);
+    TagResponseDto Create(CreateTagRequestDto dto);
+    TagResponseDto? Update(Guid id, UpdateTagRequestDto dto);
+    bool Delete(Guid id);
+}
+
+public class TagService : ITagService
+{
+    private static readonly ConcurrentDictionary<Guid, TagItem> _tags = new();
+
+    static TagService()
+    {
+        var initial = new[]
+        {
+            new TagItem
+            {
+                Id = Guid.NewGuid(),
+                Name = "Urgent",
+                ColorHex = "#e74c3c",
+                Description = "High priority items",
+                CreatedAt = DateTime.UtcNow,
+            },
+            new TagItem
+            {
+                Id = Guid.NewGuid(),
+                Name = "Work",
+                ColorHex = "#2ecc71",
+                Description = "Professional tasks and resources",
+                CreatedAt = DateTime.UtcNow,
+            },
+            new TagItem
+            {
+                Id = Guid.NewGuid(),
+                Name = "Personal",
+                ColorHex = "#9b59b6",
+                Description = "Personal bookmarks and notes",
+                CreatedAt = DateTime.UtcNow,
+            },
+        };
+
+        foreach (var tag in initial)
+        {
+            _tags[tag.Id] = tag;
+        }
+    }
+
+    public IReadOnlyList<TagResponseDto> GetAll(string? search = null)
+    {
+        var query = _tags.Values.AsEnumerable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(t =>
+                t.Name.Contains(search.Trim(), StringComparison.OrdinalIgnoreCase)
+            );
+        }
+
+        return query.OrderBy(t => t.Name).Select(MapToDto).ToList();
+    }
+
+    public TagResponseDto? GetById(Guid id)
+    {
+        if (_tags.TryGetValue(id, out var tag))
+        {
+            return MapToDto(tag);
+        }
+
+        return null;
+    }
+
+    public TagResponseDto Create(CreateTagRequestDto dto)
+    {
+        ArgumentNullException.ThrowIfNull(dto);
+
+        var tag = new TagItem
+        {
+            Id = Guid.NewGuid(),
+            Name = dto.Name.Trim(),
+           
+            ColorHex = !string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db",
+            Description = dto.Description?.Trim(),
+            CreatedAt = DateTime.UtcNow,
+        };
+
+        _tags[tag.Id] = tag;
+
+        return MapToDto(tag);
+    }
+
+    /// <summary>
+    /// Updates an existing tag by ID, or returns null if not found.
+    /// </summary>
+    public TagResponseDto? Update(Guid id, UpdateTagRequestDto dto)
+    {
+        ArgumentNullException.ThrowIfNull(dto);
+
+        if (!_tags.TryGetValue(id, out var existing))
+        {
+            return null;
+        }
+
+        existing.Name = dto.Name.Trim();
+        existing.ColorHex = !string.IsNullOrWhiteSpace(dto.ColorHex) ? dto.ColorHex.Trim() : "#3498db";
+        existing.Description = dto.Description?.Trim();
+
+        return MapToDto(existing);
+    }
+
+    public bool Delete(Guid id)
+    {
+        return _tags.TryRemove(id, out _);
+    }
+
+    private static TagResponseDto MapToDto(TagItem item) =>
+        new()
+        {
+            Id = item.Id,
+            Name = item.Name,
+            ColorHex = item.ColorHex,
+            Description = item.Description,
+            CreatedAt = item.CreatedAt,
+        };
+}
