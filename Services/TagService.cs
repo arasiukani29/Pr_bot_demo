@@ -114,6 +114,8 @@ public class TagService : ITagService
     /// </summary>
     public TagResponseDto? Update(Guid id, UpdateTagRequestDto dto)
     {
+        ArgumentNullException.ThrowIfNull(dto);
+
         if (!_tags.TryGetValue(id, out var existing))
         {
             return null;
